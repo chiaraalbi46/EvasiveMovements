@@ -1,3 +1,5 @@
 /comments.py 
 .idea/
-seq/
+sequences/
+__pycache__/
+datasets/  # quando abbiamo il dataset nostro lo possiamo salvare
