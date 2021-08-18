@@ -77,10 +77,12 @@ if __name__ == "__main__":
     print(nf)
     x_array = []
     z_array = []
-
+    y_rot = []
     step = 100  # campionamento frames
     i = 0
-    while i < 125:
+    array_json = []
+    while i < nf:
+        dict_frame = {}
         if zed.grab(runtime) == sl.ERROR_CODE.SUCCESS:  # frame
 
             # tracking_state = zed.get_position(camera_pose)
@@ -89,6 +91,8 @@ if __name__ == "__main__":
 
                 print("FRAME: ", i)
                 # Rotation
+                eul = camera_pose.get_euler_angles(False)
+
                 rotation = camera_pose.get_rotation_vector()
                 text_rotation = str((round(rotation[0], 2), round(rotation[1], 2), round(rotation[2], 2)))
 
@@ -100,9 +104,25 @@ if __name__ == "__main__":
                 tz = round(camera_pose.get_translation(translation).get()[2], 3)
                 text_translation = str(
                     (round(translation.get()[0], 2), round(translation.get()[1], 2), round(translation.get()[2], 2)))
-                print("Translation: Tx: {0}, Ty: {1}, Tz {2}, Timestamp: {3}\n".format(tx, ty, tz, camera_pose.timestamp.get_seconds()))
-                x_array.append(tx)
-                z_array.append(tz)
+                print("Translation: Tx: {0}, Ty: {1}, Tz {2}, Timestamp: {3}\n".format(tx, ty, tz,
+                                                                                       camera_pose.timestamp.get_seconds()))
+
+                # x_array.append(tx)
+                # z_array.append(tz)
+                #y_rot.append(eul[1])
+                if tx == -0.0:
+                    tx = 0.0
+                if ty == -0.0:
+                    ty = 0.0
+                if tz == -0.0:
+                    tz = 0.0
+                if eul[1] == -0.0:
+                    eul[1] = 0.0
+
+                dict_frame = {'Frame': i, 'cords': [tx, ty, tz], 'angle': eul[1]}
+                #print('dict', dict_frame)
+                array_json.append(dict_frame)
+                #print('array_j', array_json)
 
                 if i % step == 0:
                     # salvo le coordinate x, z
@@ -115,7 +135,7 @@ if __name__ == "__main__":
                     # print(datetime.fromtimestamp(camera_pose.timestamp.get_seconds()).strftime("%Y-%m-%d %I:%M:%S"))
                     # print("Text rotation: ", text_rotation)
                     # print("Translation: Tx: {0}, Ty: {1}, Tz {2}, Timestamp: {3}\n".format(tx, ty, tz,
-                                                                                            # camera_pose.timestamp.get_seconds()))
+                    # camera_pose.timestamp.get_seconds()))
 
                     # Display orientation quaternion
                     py_orientation = sl.Orientation()
@@ -125,11 +145,9 @@ if __name__ == "__main__":
                     ow = round(camera_pose.get_orientation(py_orientation).get()[3], 3)
                     # print("Orientation: ox: {0}, oy:  {1}, oz: {2}, ow: {3}\n".format(ox, oy, oz, ow))
 
-
                 # print(type(camera_pose.timestamp.get_milliseconds()))
                 # # print(camera_pose.timestamp.get_milliseconds())
                 # var = camera_pose.timestamp.get_milliseconds()
-
             i += 1
 
     # JSON
@@ -137,9 +155,17 @@ if __name__ == "__main__":
 
     if name:  # se name non è stringa vuota
         if not os.path.isfile(name):
-            write_json({'X_array': x_array, 'Z_array': z_array}, name)  # lo creo
+            write_json(array_json, name)  # lo creo
+            # write_json({'X_array': x_array, 'Z_array': z_array, 'Y_rot': y_rot}, name)  # lo creo
+
         else:
             print("Il file : ", name, " è già presente")
+            val = input("Vuoi sovrascrivere? yes/no:")
+            # print(val)
+            if val == 'yes' or val == 'Y' or val == 'y':
+                os.remove(name)
+                write_json(array_json, name)  # lo creo
+            #    print("Il file : ", name, " è già presente")
 
     # Disable positional tracking and close the camera
     zed.disable_positional_tracking()
