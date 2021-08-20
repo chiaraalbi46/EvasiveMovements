@@ -7,6 +7,8 @@ e la funzione transform_pose è presa da https://www.stereolabs.com/docs/positio
 
 import sys
 import pyzed.sl as sl
+import os
+from zed1 import write_json
 
 
 def transform_pose(pose, tx):
@@ -36,7 +38,8 @@ if __name__ == '__main__':
                                     coordinate_units=sl.UNIT.METER,
                                     coordinate_system=sl.COORDINATE_SYSTEM.RIGHT_HANDED_Y_UP)
 
-    if len(sys.argv) == 2:
+    name = ''
+    if len(sys.argv) >= 2:
         filepath = sys.argv[1]
         spl = filepath.split('/')
         vid_name = spl[len(spl) - 1]
@@ -45,6 +48,10 @@ if __name__ == '__main__':
         print(vname)
         print("Using SVO file: {0}".format(filepath))
         init_params.set_from_svo_file(filepath)
+        if len(sys.argv) == 3:  # quando voglio creare il json per le traiettorie passo come ultimo parametro il path alla cartella in cui voglio salvare il file
+            pathToJson = sys.argv[2]
+            name = pathToJson + vname + '.json'
+            print("NAME: ", name)
         # print(init_params)
     else:
         print("svo no read")
@@ -74,6 +81,9 @@ if __name__ == '__main__':
     i = 0  # importante
     # grab parte comunque dall'inizio del video - se mettiamo dei valori diversi per i (>0) non partiamo dal numero di frame corrispondente al valore di i
 
+    x_array = []
+    z_array = []
+    rot_array = []
     while i < nf:
         if zed.grab(runtime) == sl.ERROR_CODE.SUCCESS:  # frame
 
@@ -93,24 +103,45 @@ if __name__ == '__main__':
 
                 # Display the translation and timestamp
                 # translation = sl.Translation()
-                if i % step == 0:
-                    print("FRAME: ", i)
-                    # print("Traslation matrix: ", camera_pose.get_translation(py_translation).get())
-                    print("Rotation matrix: ", camera_pose.get_rotation_matrix())
-                    rotation = camera_pose.get_rotation_vector()
-                    text_rotation = str((round(rotation[0], 2), round(rotation[1], 2), round(rotation[2], 2)))
-                    print("Rotation vector: ", text_rotation)
-                    translation = py_translation
-                    tx = round(camera_pose.get_translation(translation).get()[0], 3)
-                    ty = round(camera_pose.get_translation(translation).get()[1], 3)
-                    tz = round(camera_pose.get_translation(translation).get()[2], 3)
-                    text_translation = str(
-                        (round(translation.get()[0], 2), round(translation.get()[1], 2), round(translation.get()[2], 2)))
-                    print("Translation: Tx: {0}, Ty: {1}, Tz {2}\n".format(tx, ty, tz))
+                # if i % step == 0:
+                print("FRAME: ", i)
+                # print("Traslation matrix: ", camera_pose.get_translation(py_translation).get())
+                print("Rotation matrix: ", camera_pose.get_rotation_matrix())
+                rotation = camera_pose.get_rotation_vector()
+                eul = camera_pose.get_euler_angles(False)
+                print("Eul: ", eul)
+                print()
+                text_rotation = str((round(rotation[0], 2), round(rotation[1], 2), round(rotation[2], 2)))
+                print("Rotation vector: ", text_rotation)
+                translation = py_translation
+                tx = round(camera_pose.get_translation(translation).get()[0], 3)
+                ty = round(camera_pose.get_translation(translation).get()[1], 3)
+                tz = round(camera_pose.get_translation(translation).get()[2], 3)
+                text_translation = str(
+                    (round(translation.get()[0], 2), round(translation.get()[1], 2), round(translation.get()[2], 2)))
+                print("Translation: Tx: {0}, Ty: {1}, Tz {2}\n".format(tx, ty, tz))
+                x_array.append(tx)
+                z_array.append(tz)
+                rot_array.append(eul[1])
+
+                # Display orientation quaternion
+                py_orientation = sl.Orientation()
+                ox = round(camera_pose.get_orientation(py_orientation).get()[0], 3)
+                oy = round(camera_pose.get_orientation(py_orientation).get()[1], 3)
+                oz = round(camera_pose.get_orientation(py_orientation).get()[2], 3)
+                ow = round(camera_pose.get_orientation(py_orientation).get()[3], 3)
+                print("Orientation: ox: {0}, oy:  {1}, oz: {2}, ow: {3}\n".format(ox, oy, oz, ow))
 
                 # pose_data = camera_pose.pose_data(sl.Transform)  # se lo mettiamo sembra fermarsi dopo la stampa di un solo frame
 
             i += 1
+
+    if name:  # se name non è stringa vuota
+        if not os.path.isfile(name):
+            # write_json({'X_array': x_array, 'Z_array': z_array, 'R_array': rot_array}, name)  # lo creo
+            write_json({'X_array': x_array, 'Z_array': z_array}, name)
+        else:
+            print("Il file : ", name, " è già presente")
 
     # # Get the distance between the center of the camera and the left eye
     # translation_left_to_center = zed.get_camera_information().calibration_parameters.T[0]
