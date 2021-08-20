@@ -8,7 +8,7 @@ e la funzione transform_pose è presa da https://www.stereolabs.com/docs/positio
 import sys
 import pyzed.sl as sl
 import os
-from zed1 import write_json
+from create_video_json import write_json
 
 
 def transform_pose(pose, tx):

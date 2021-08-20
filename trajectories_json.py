@@ -1,6 +1,8 @@
 import json
+import argparse
 import numpy as np
 import math
+import os
 
 
 def write_json(data, filename):
@@ -23,11 +25,17 @@ def origin_traj(i_start, xdata, zdata, angle, point_future):
             count += 1
         count = 0
         i_start += point_future  # num_vectors
+    # print("Origin: ", origin)
     return origin, angle_o
 
 
-def create_traj_json(i_start, point_past, point_future):
-    with open('C:/Users/ninad/Desktop/video_guida/json/video16.json') as json_file:
+# def create_traj_json(i_start, point_past, point_future):
+#     with open('C:/Users/ninad/Desktop/video_guida/json/video16.json') as json_file:
+def create_traj_json(video_json_path, i_start, point_past, point_future, dest_folder):
+    i_start = int(i_start)
+    point_past = int(point_past)
+    point_future = int(point_future)
+    with open(video_json_path) as json_file:
         d = json.load(json_file)
         # print(d)
         xdata = []
@@ -104,8 +112,37 @@ def create_traj_json(i_start, point_past, point_future):
     for i in range(len(array)):
         print(array[i], '\n')
 
-    write_json(array, 'C:/Users/ninad/Desktop/video_guida/json/video16_traj.json')
+    # write_json(array, 'C:/Users/ninad/Desktop/video_guida/json/video16_traj.json')
+
+    spl = video_json_path.split(os.sep)  # '/'
+    vid_name = spl[len(spl) - 1]
+    spl1 = vid_name.split('.')
+    vname = spl1[0]
+    print(vname)
+    final_name = vname + '_traj.json'
+    pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
+    print(pathToTrajFile)
+
+    write_json(array, pathToTrajFile)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Create the trajectories' file from a json file of a video sequence")
+
+    parser.add_argument("--video_json_path", dest="input", default=None, help="Path of the json file of a video")
+    parser.add_argument("--i_start", dest="start", default=0, help="Initial system origin")
+    parser.add_argument("--point_past", dest="past", default=None,
+                        help="Number of past points to remap in the new reference system")
+    parser.add_argument("--point_future", dest="future", default=None,
+                        help="Number of future points to remap in the new reference system")
+    parser.add_argument("--dest_folder", dest="dest", default=None,
+                        help="Path to the destination folder for the trajectories' file")
+
+    args = parser.parse_args()
+
+    create_traj_json(video_json_path=args.input, i_start=args.start, point_past=args.past, point_future=args.future, dest_folder=args.dest)
 
 
 if __name__ == '__main__':
-    create_traj_json(0, 5, 10)  # i_start, point_past, point_future
+    # create_traj_json(0, 5, 10)  # i_start, point_past, point_future
+    main()
