@@ -66,7 +66,7 @@ def create_video_json(video_path, dest_folder):
 
                 print("FRAME: ", i)
                 # Rotation
-                eul = camera_pose.get_euler_angles(False)
+                eul = camera_pose.get_euler_angles()
 
                 # Display the translation and timestamp
                 translation = py_translation
