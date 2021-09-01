@@ -8,6 +8,7 @@ import pyzed.sl as sl
 import json
 import os
 import argparse
+import platform
 
 
 def write_json(data, filename):
@@ -15,8 +16,7 @@ def write_json(data, filename):
         json.dump(data, f, indent=4)
 
 
-def create_video_json(video_path, dest_folder):
-
+def create_video_json(video_path, dest_folder, step):
     # Set configuration parameters
     init_params = sl.InitParameters(camera_resolution=sl.RESOLUTION.HD720,  # Use HD720 video mode (default fps: 60)
                                     coordinate_units=sl.UNIT.METER,
@@ -30,11 +30,24 @@ def create_video_json(video_path, dest_folder):
     vname = spl1[0]
     print(vname)
     final_name = vname + '.json'
-    json_path = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
+
+    if platform.system() is 'Windows' and '\\' in dest_folder:
+        dest_folder = dest_folder.replace('\\', '/')
+        print("dest folder traformato: ", dest_folder)
+
+    json_path = dest_folder + final_name  # slash
     print(json_path)
+    images_path = dest_folder + 'left_frames/'
+    if not os.path.exists(images_path):
+        print("Creo la cartella left frames")
+        os.mkdir(images_path)
 
     # Create a ZED camera object
     zed = sl.Camera()
+
+    # Initialize images
+    image = sl.Mat()
+    # image_r = sl.Mat()
 
     # Open the camera
     status = zed.open(init_params)
@@ -65,30 +78,49 @@ def create_video_json(video_path, dest_folder):
             if tracking_state == sl.POSITIONAL_TRACKING_STATE.OK:
 
                 print("FRAME: ", i)
-                # Rotation
-                eul = camera_pose.get_euler_angles()
 
-                # Display the translation and timestamp
-                translation = py_translation
-                tx = round(camera_pose.get_translation(translation).get()[0], 3)
-                ty = round(camera_pose.get_translation(translation).get()[1], 3)
-                tz = round(camera_pose.get_translation(translation).get()[2], 3)
-                print("Translation: Tx: {0}, Ty: {1}, Tz {2}, Timestamp: {3}\n".format(tx, ty, tz,
-                                                                                       camera_pose.timestamp.get_seconds()))
+                if i % int(step) == 0:
+                    # Rotation
+                    eul = camera_pose.get_euler_angles()
 
-                if tx == -0.0:
-                    tx = 0.0
-                if ty == -0.0:
-                    ty = 0.0
-                if tz == -0.0:
-                    tz = 0.0
-                if eul[1] == -0.0:
-                    eul[1] = 0.0
+                    # Display the translation and timestamp
+                    translation = py_translation
+                    tx = round(camera_pose.get_translation(translation).get()[0], 3)
+                    ty = round(camera_pose.get_translation(translation).get()[1], 3)
+                    tz = round(camera_pose.get_translation(translation).get()[2], 3)
+                    print("Translation: Tx: {0}, Ty: {1}, Tz {2}, Timestamp: {3}\n".format(tx, ty, tz,
+                                                                                           camera_pose.timestamp.get_seconds()))
 
-                dict_frame = {'Frame': i, 'cords': [tx, ty, tz], 'angle': eul[1]}
-                # print('dict', dict_frame)
-                array_json.append(dict_frame)
-                # print('array_j', array_json)
+                    if tx == -0.0:
+                        tx = 0.0
+                    if ty == -0.0:
+                        ty = 0.0
+                    if tz == -0.0:
+                        tz = 0.0
+                    if eul[1] == -0.0:
+                        eul[1] = 0.0
+
+                    dict_frame = {'Frame': i, 'cords': [tx, ty, tz], 'angle': eul[1]}
+                    array_json.append(dict_frame)
+
+                    # Salvo il left frame
+                    zed.retrieve_image(image, sl.VIEW.LEFT)
+                    image_name = 'frame' + str(i)
+                    if i < 10:
+                        image_name = 'frame000' + str(i)
+                    elif 10 <= i < 100:
+                        image_name = 'frame00' + str(i)
+                    elif 100 <= i < 1000:
+                        image_name = 'frame0' + str(i)
+
+                    print("Writing image: ", image_name)
+                    im = os.path.join(images_path, image_name + '.png')
+                    # print(os.path.join(images_path, image_name))
+
+                    if not os.path.exists(im):
+                        image.write(im)
+                    else:
+                        print("NON RICREO")
 
             i += 1
 
@@ -109,18 +141,47 @@ def create_video_json(video_path, dest_folder):
     zed.close()
 
 
+def folder_process(folder, dest_folder, step):
+    # per adesso manterrei la scansione 'normal' e casi manovre... poi vediamo
+    print(os.listdir(folder))
+    dirs = os.listdir(folder)
+    for d in dirs:
+        print("Subdir: ", d)
+        sub_dir = os.listdir(folder + d)
+        dest_path = dest_folder + d
+        # print("Dest path: ", dest_path)
+        for s in sub_dir:
+            # print('\t', s)
+            svo_path = os.path.join(folder, d, s)
+            # print("SVOpath: ", svo_path)
+            if platform.system() == 'Windows' and '\\' in svo_path:
+                svo_path = svo_path.replace('\\', '/')
+            print("\t SVOpath: ", svo_path)
+            create_video_json(svo_path, dest_folder, step)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Create the trajectories' file from a json file of a video sequence")
 
-    parser.add_argument("--video_path", dest="input", default=None, help="Path of the svo video")
-    parser.add_argument("--dest_folder", dest="dest", default=None,
+    parser.add_argument("--video", dest="input", default=None, help="Path of the svo video")
+    parser.add_argument("--dest", dest="dest", default=None,
                         help="Path to the destination folder for the video json file")
+    parser.add_argument("--step", dest="step", default=10, help="Sampling rate")
 
     args = parser.parse_args()
+    if os.path.isdir(args.input):
+        # esecuzione su cartella (e sottocartelle)
+        folder_process(folder=args.input, dest_folder=args.dest, step=args.step)
+    else:
+        # esecuzione singolo video
+        create_video_json(video_path=args.input, dest_folder=args.dest, step=args.step)
 
-    create_video_json(video_path=args.input, dest_folder=args.dest)
+    # ES1: python create_video_json.py --video 'D:\Dataset_Evasive_Movements\video\svo_cut\z_normal\video26.svo'
+    # --dest 'C:\Users\chiar\PycharmProjects\EvasiveMovements\datasets\images_dataset\video26\'
+
+    # ES2: python create_video_json.py --video 'D:\Dataset_Evasive_Movements\video\svo_cut\'
+    # --dest 'C:\Users\chiar\PycharmProjects\EvasiveMovements\datasets\images_dataset\'
 
 
 if __name__ == '__main__':
     main()
-
