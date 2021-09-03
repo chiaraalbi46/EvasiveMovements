@@ -8,5 +8,5 @@ seq/
 sequences/
 __pycache__/
 datasets/  # quando abbiamo il dataset nostro lo possiamo salvare
-*.ipynb  # ignora tutti i file con estensione ipynb (i notebook)
+/*.ipynb  # ignora tutti i file con estensione ipynb (i notebook)
 
