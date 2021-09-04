@@ -24,6 +24,7 @@ def origin_traj(i_start, xdata, zdata, angle, origin_distance):
 
 
 def create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, dest_folder):
+    point_future = point_future + 1 #aggiungo punto futuro (origine esclude)
     with open(video_json_path) as json_file:
         d = json.load(json_file)
         xdata = []
@@ -61,7 +62,7 @@ def create_traj_json(video_json_path, i_start, point_past, point_future, origin_
     dic_traj = {'Frame': [], 'Past': [], 'Present': [], 'Future': [], }
 
     f = 0
-    for i in range(len(xdata) - 10):
+    for i in range(len(xdata)):
         if xdata[i] == origin[f][0] and zdata[i] == origin[f][1] and f < len(origin) - 1 and i % origin_distance == 0:
 
             present.append(origin[f])
@@ -69,7 +70,7 @@ def create_traj_json(video_json_path, i_start, point_past, point_future, origin_
 
             # Punti futuri
             count_future = 1
-            while count_future < point_future:
+            while count_future < point_future and i + count_future < len(xdata):
                 # Rotazione        #angolo in radianti
                 x_rot = (xdata[i + count_future] - origin[f][0]) * math.cos(angle_o[f]) - (
                         zdata[i + count_future] - origin[f][1]) * math.sin(angle_o[f])
@@ -135,9 +136,9 @@ def main():
 
     parser.add_argument("--video_json_path", dest="input", default=None, help="Path of the json file of a video")
     parser.add_argument("--i_start", dest="start", default=0, help="Initial system origin")
-    parser.add_argument("--point_past", dest="past", default=None,
+    parser.add_argument("--point_past", dest="past", default=5,
                         help="Number of past points to remap in the new reference system")
-    parser.add_argument("--point_future", dest="future", default=None,
+    parser.add_argument("--point_future", dest="future", default=30,
                         help="Number of future points to remap in the new reference system")
     parser.add_argument("--origin_distance", dest="origin_distance", default=10,
                         help="Distance between two successive origins")
