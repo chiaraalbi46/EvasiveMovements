@@ -2,12 +2,13 @@ from  load_dataset import load_data_singleframe
 import torch, argparse, os
 from train import train
 from test import test
-import config as cfg
+import configs.config as cfg
 from torch.utils.data import TensorDataset, DataLoader
 from torch.autograd import Variable
 import numpy as np
 from datetime import datetime
 from initialize_model import initialize_model
+
 #todo fare config con path locali
 ########################################################################################################################
 # STARTING THE RAINING OF THE NET
