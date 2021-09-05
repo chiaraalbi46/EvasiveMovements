@@ -9,6 +9,7 @@ import os
 import argparse
 import platform
 from configs.config import cfg
+from create_csv_file import right_slash
 
 
 def write_json(data, filename):
@@ -37,7 +38,7 @@ def create_video_json(video_path, dest_folder, step):
 
     json_path = dest_folder + final_name  # slash
     print(json_path)
-    images_path = dest_folder + 'left_frames/'
+    images_path = dest_folder + '/left_frames/'
     if not os.path.exists(images_path):
         print("Creo la cartella left frames")
         os.mkdir(images_path)
@@ -147,16 +148,21 @@ def folder_process(folder, dest_folder, step):
     dirs = os.listdir(folder)
     for d in dirs:
         print("Subdir: ", d)
+        if not os.path.exists(folder + d):
+            print("Creo la sottocartella normal /sx_* etc")
+            os.mkdir(folder + d)
+
         sub_dir = os.listdir(folder + d)
-        # dest_path = dest_folder + d
-        # print("Dest path: ", dest_path)
+
         for s in sub_dir:
-            # print('\t', s)
-            svo_path = os.path.join(folder, d, s)
-            # print("SVOpath: ", svo_path)
-            if platform.system() == 'Windows' and '\\' in svo_path:
-                svo_path = svo_path.replace('\\', '/')
+            svo_path = right_slash(os.path.join(folder, d, s))
             print("\t SVOpath: ", svo_path)
+            dest_path = right_slash(os.path.join(dest_folder, d, s))
+            print("Dest path: ", dest_path)
+            if not os.path.exists(dest_path):
+                print("Creo la cartella video etc")
+                os.mkdir(dest_path)
+
             create_video_json(svo_path, dest_folder, step)
 
 
