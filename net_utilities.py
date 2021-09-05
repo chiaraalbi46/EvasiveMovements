@@ -9,6 +9,7 @@ from configs.config import cfg
 
 # TODO: rinominare video con 0*
 # TODO: mettere qui controllo per avere video0* se ho video3 ad esempio oppure rinominare anche video con una sola cifra
+# TODO: folder process
 
 
 # def dataset_split(folder, train_perc, test_perc, config_folder):
@@ -78,7 +79,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Split dataset")
 
-    parser.add_argument("--folder", dest="input", default=cfg.DATASET_PATH['original'],
+    parser.add_argument("--folder", dest="input", default=cfg.DATASET_PATH,
                         help="Path to the folder that contains the dataset (video folders with frames and json)")
     parser.add_argument("--train_p", dest="train_p", default='',
                         help="% of training samples, expressed as integer")

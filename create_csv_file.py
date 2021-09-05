@@ -37,7 +37,7 @@ def create_csv(config_path, config_f, data_type, len_seq):
             spl = path.split('/')
             vid_name = spl[len(spl) - 1]
 
-            json_folder = path + '/json/'
+            json_folder = path + '/'  # TODO: fix '/json/'
             # print("json folder: ", json_folder)
 
             data = json.load(open(json_folder + vid_name + '_traj.json'))  # apro il file con le traiettorie
