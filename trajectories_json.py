@@ -143,7 +143,7 @@ def folder_process(folder, i_start, point_past, point_future, origin_distance):
         sub_dir = os.listdir(folder + d)
 
         for s in sub_dir:  # video*
-            json_folder = right_slash(os.path.join(folder, d, s))   # + '/json/'
+            json_folder = right_slash(os.path.join(folder, d, s)) + '/'  # + '/json/'
             print("\t json folder: ", json_folder)
             video_json_path = json_folder + s + '.json'  # .../video*.json
             print("\t video json path: ", video_json_path)
