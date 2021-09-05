@@ -157,7 +157,9 @@ def folder_process(folder, dest_folder, step):
         for s in sub_dir:
             svo_path = right_slash(os.path.join(folder, d, s))
             print("\t SVOpath: ", svo_path)
-            dest_path = right_slash(os.path.join(dest_folder, d, s))
+            spl = s.split('.')
+            vid = spl[0]
+            dest_path = right_slash(os.path.join(dest_folder, d, vid))
             print("Dest path: ", dest_path)
             if not os.path.exists(dest_path):
                 print("Creo la cartella video etc")
