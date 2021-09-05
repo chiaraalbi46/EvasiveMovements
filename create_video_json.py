@@ -148,7 +148,8 @@ def folder_process(folder, dest_folder, step):
     dirs = os.listdir(folder)
     for d in dirs:
         print("Subdir: ", d)
-        if not os.path.exists(folder + d):
+        print("sub folder: ", folder + d)
+        if not os.path.exists(dest_folder + d):
             print("Creo la sottocartella normal /sx_* etc")
             os.mkdir(folder + d)
 
