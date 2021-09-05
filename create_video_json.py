@@ -36,7 +36,7 @@ def create_video_json(video_path, dest_folder, step):
         dest_folder = dest_folder.replace('\\', '/')
         print("dest folder traformato: ", dest_folder)
 
-    json_path = dest_folder + '/' + final_name  # slash
+    json_path = dest_folder + '/' + final_name  # slash   # TODO: mettere /json/
     print(json_path)
     images_path = dest_folder + '/left_frames/'
     if not os.path.exists(images_path):
