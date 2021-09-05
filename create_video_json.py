@@ -168,7 +168,7 @@ def main():
     #                     help="Path to the destination folder for the video json file")
 
     parser.add_argument("--video", dest="input", default=cfg.SVO_DATASET_PATH, help="Path of the svo video")
-    parser.add_argument("--dest", dest="dest", default=cfg.DATASET_PATH['original'],
+    parser.add_argument("--dest", dest="dest", default=cfg.DATASET_PATH,
                         help="Path to the destination folder for the video json file")
     parser.add_argument("--step", dest="step", default=10, help="Sampling rate")
 

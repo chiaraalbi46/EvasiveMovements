@@ -2,6 +2,7 @@ import cv2
 import os
 import argparse
 from create_csv_file import right_slash
+from configs.config import cfg
 
 SCALE_PERCENT = 12.5
 ext = '.png'
@@ -58,12 +59,12 @@ def main(folder):  # images_dataset
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Preprocessing of the left frames.")
 
-    parser.add_argument("--folder", dest="input",
-                        default='D:/Dataset_Evasive_Movements/datasets/images_dataset/',
-                        help="Path of the folder containing normal and sx_*, dx_* subfolders")
-    # rivedere ...
     # parser.add_argument("--folder", dest="input",
-    #                     default=cfg.DATASET_PATH['original'],
+    #                     default='D:/Dataset_Evasive_Movements/datasets/images_dataset/',
     #                     help="Path of the folder containing normal and sx_*, dx_* subfolders")
+    # rivedere ...
+    parser.add_argument("--folder", dest="input",
+                        default=cfg.DATASET_PATH,
+                        help="Path of the folder containing normal and sx_*, dx_* subfolders")
     args = parser.parse_args()
     main(folder=args.input)
