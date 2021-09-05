@@ -24,6 +24,9 @@ def create_csv(config_path, config_f, data_type, len_seq):
 
     save_dir = os.path.join(CSV_DATASET_PATH, data_type)
     print("save_dir: ", save_dir)
+    if not os.path.exists(save_dir):
+        os.mkdir(save_dir)
+
     save_path = right_slash(os.path.join(save_dir, data_type + '_' + conf + '_' + str(
         len_seq) + '_sequence.csv'))
     print("save_path: ", save_path)
