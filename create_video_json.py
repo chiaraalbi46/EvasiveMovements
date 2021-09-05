@@ -166,7 +166,7 @@ def folder_process(folder, dest_folder, step):
                 print("Creo la cartella video etc")
                 os.mkdir(dest_path)
 
-            create_video_json(svo_path, dest_folder, step)
+            create_video_json(svo_path, dest_path, step)
 
 
 def main():
