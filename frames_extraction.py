@@ -1,8 +1,8 @@
 import cv2
 import os
-from preprocess import adjustImages
+# from preprocess import preprocess_frames
 
-ext = '.jpg'
+ext = '.png'
 dir_name = os.path.dirname('sequences/')
 count_len = len(os.listdir(dir_name))
 
@@ -23,4 +23,4 @@ for c in range(count_len):
         else:
             vid_cap.release()
             break
-    adjustImages(dir_video)
+    # preprocess_frames(dir_video)

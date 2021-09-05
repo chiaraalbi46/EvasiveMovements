@@ -77,6 +77,7 @@ def main(videos_file):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Cut a group of video given a json file.")
 
-    parser.add_argument("--videos_file", dest="input", default='/home/aivdepth/json/cut_video_j.json', help="Path of the json file to cut videos")
+    parser.add_argument("--videos_file", dest="input", default='/home/aivdepth/json/cut_video_j.json',
+                        help="Path of the json file to cut videos")
     args = parser.parse_args()
     main(videos_file=args.input)

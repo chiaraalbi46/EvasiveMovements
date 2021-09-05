@@ -18,7 +18,6 @@ def load_data_singleframe(csv_path, len_sequence):
     data_df = pd.read_csv(csv_path, error_bad_lines=False, names=["video_dir", "path_frame", "past_point", "future_point"])
 
     video_dir = data_df['video_dir'].values
-    # print("video dir: ", video_dir)
     path_frame = data_df['path_frame'].values
     data_dimension = len(path_frame)
     print(data_dimension)
@@ -91,12 +90,13 @@ def convert_to_vector(string):  # video ?
 
 
 if __name__ == '__main__':
-    # csv_path = 'C:/Users/chiar/PycharmProjects/EvasiveMovements/datasets/csv_dataset/train/train_config2_10_sequence.csv'
-    # load_data_singleframe(csv_path, 9)
+    # csv_path = 'C:/Users/chiar/PycharmProjects/EvasiveMovements/datasets/csv_dataset/train
+    # /train_config2_10_sequence.csv' load_data_singleframe(csv_path, 9)
     parser = argparse.ArgumentParser(description="Load dataset from csv file.")
 
     parser.add_argument("--csv", dest="input",
-                        default='C:/Users/chiar/PycharmProjects/EvasiveMovements/datasets/csv_dataset/train/train_config2_10_sequence.csv',
+                        default='C:/Users/chiar/PycharmProjects/EvasiveMovements/datasets/csv_dataset/train'
+                                '/train_config2_10_sequence.csv',
                         help="Path to the csv file")
     parser.add_argument("--len", dest="len", default=10, help="Lenght of future vector")
     # non potrebbe prenderlo dal nome del file csv ??

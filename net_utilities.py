@@ -3,17 +3,20 @@ import os
 import numpy as np
 from create_video_json import write_json
 import argparse
+from configs.config import cfg
 
 # NB: lo split va fatto sui video (nel senso di nomi delle cartelle)
 
 # TODO: rinominare video con 0*
-# TODO: mettere qui controllo per avere video0* se ho video3 ad esempio  oppure rinominare anche video con una sola cifra
+# TODO: mettere qui controllo per avere video0* se ho video3 ad esempio oppure rinominare anche video con una sola cifra
 
 
+# def dataset_split(folder, train_perc, test_perc, config_folder):
+    # base_dest = cfg.C.JSON_DATASET_PATH
 def dataset_split(folder, train_perc, test_perc, base_dest, config_folder):
 
     dataset = os.listdir(folder)
-    size = len(dataset)
+    size = len(dataset)  # numero di cartelle video* con i frame e i json
     indices = np.arange(size)
     print(indices)
 
@@ -36,8 +39,8 @@ def dataset_split(folder, train_perc, test_perc, base_dest, config_folder):
     test_a = []
     val_a = []
     for i in range(size):
-        # poi non ci sarà
         el = dataset[i]
+        # poi non ci sarà
         # spl = el.split('.')
         # vid_name = spl[0]
         # path = folder + vid_name
@@ -75,19 +78,22 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Split dataset")
 
-    parser.add_argument("--folder", dest="input", default='',
+    parser.add_argument("--folder", dest="input", default=cfg.DATASET_PATH['original'],
                         help="Path to the folder that contains the dataset (video folders with frames and json)")
     parser.add_argument("--train_p", dest="train_p", default='',
                         help="% of training samples, expressed as integer")
     parser.add_argument("--test_p", dest="test_p", default='',
                         help="% of testing samples, expressed as integer")
-    parser.add_argument("--base", dest="base", default='C:/Users/chiar/PycharmProjects/EvasiveMovements/datasets/json_dataset/',
+    parser.add_argument("--base", dest="base", default=cfg.JSON_DATASET_PATH,
                         help="Path to the json_dataset folder")
     parser.add_argument("--conf", dest="conf", default='', help="Name of the desired config folder")
     args = parser.parse_args()
 
     dataset_split(folder=args.input, train_perc=int(args.train_p), test_perc=int(args.test_p),
                   base_dest=args.base, config_folder=args.conf)
+
+    # dataset_split(folder=args.input, train_perc=int(args.train_p), test_perc=int(args.test_p),
+    # config_folder=args.conf)
 
 
 

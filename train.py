@@ -1,15 +1,14 @@
-import sys, os, math, torch
+import sys
+import torch
 
-sys.path.insert(1, '/home/biondibazzanti/AutonomousDriving/Pytorch/models')
-#from utils.utilities import export_plot_from_tensorboard
+# sys.path.insert(1, '/home/biondibazzanti/AutonomousDriving/Pytorch/models')
+# from utils.utilities import export_plot_from_tensorboard
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.tensorboard import SummaryWriter
 import torch.nn as nn
 import numpy as np
 from os import listdir
 from os.path import isfile, join
-import cv2
-from torchvision.utils import make_grid
 
 from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
 import matplotlib.pyplot as plt

@@ -1,6 +1,8 @@
-import sys, os, math, csv, torch
-#from trajectory_images import save_video
-import config as cfg
+import os
+import csv
+import torch
+# from trajectory_images import save_video
+from configs import config as cfg
 import numpy as np
 
 
@@ -10,7 +12,7 @@ def test(model, criterion, model_path, test_loader, paths, dev, model_type):
     distances = []
 
     csv_file = cfg.SAVE_RESULTS_PATH[model_type] + "summarize_test.csv"
-    #video_name = dir_name + cfg.SAVE_VIDEO_PATH[model_type] + "summarize_video.avi"
+    # video_name = dir_name + cfg.SAVE_VIDEO_PATH[model_type] + "summarize_video.avi"
 
     if os.path.exists(csv_file):
         os.remove(csv_file)
@@ -52,4 +54,4 @@ def test(model, criterion, model_path, test_loader, paths, dev, model_type):
     print('*' * 100)
     print('Starting Video Creation')
 
-    #save_video(video_name=video_name, csv_path=csv_file, len_seq=cfg.TEST.LEN_SEQUENCES, model_type=model_type)
+    # save_video(video_name=video_name, csv_path=csv_file, len_seq=cfg.TEST.LEN_SEQUENCES, model_type=model_type)

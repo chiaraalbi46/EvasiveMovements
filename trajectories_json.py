@@ -3,6 +3,7 @@ import json
 import os
 import numpy as np
 import math
+from create_csv_file import right_slash
 
 
 def write_json(data, filename):
@@ -24,7 +25,7 @@ def origin_traj(i_start, xdata, zdata, angle, origin_distance):
 
 
 def create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, dest_folder):
-    point_future = point_future + 1 #aggiungo punto futuro (origine esclude)
+    point_future = point_future + 1  # aggiungo punto futuro (origine esclude)
     with open(video_json_path) as json_file:
         d = json.load(json_file)
         xdata = []
@@ -130,7 +131,25 @@ def create_traj_json(video_json_path, i_start, point_past, point_future, origin_
         write_json(array, pathToTrajFile)
 
 
-# video_json_path, i_start, point_past, point_future, origin_distance, dest_folder
+# folder = 'D:\Dataset_Evasive_Movements\datasets\images_dataset\'
+
+
+def folder_process(folder, i_start, point_past, point_future, origin_distance):
+    print(folder)
+    print(os.listdir(folder))
+    dirs = os.listdir(folder)
+    for d in dirs:  # normal / sx_* / dx_*
+        print("Subdir: ", d)
+        sub_dir = os.listdir(folder + d)
+
+        for s in sub_dir:  # video*
+            json_folder = right_slash(os.path.join(folder, d, s)) + '/json/'
+            print("\t json folder: ", json_folder)
+            video_json_path = json_folder + s + '.json'  # .../video*.json
+            print("\t video json path: ", video_json_path)
+            create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, json_folder)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Create the trajectories' file from a json file of a video sequence")
 
@@ -148,8 +167,16 @@ def main():
 
     args = parser.parse_args()
 
-    create_traj_json(video_json_path=args.input, i_start=args.start, point_past=args.past, point_future=args.future,
-                     origin_distance=args.origin_distance, dest_folder=args.dest)
+    # folder_process(folder=args.input, i_start=int(args.start), point_past=int(args.past),
+    # point_future=int(args.future),origin_distance=int(args.origin_distance))
+    if os.path.isdir(args.input):
+        # esecuzione su cartella (e sottocartelle)
+        folder_process(folder=args.input, i_start=int(args.start), point_past=int(args.past),
+                       point_future=int(args.future), origin_distance=int(args.origin_distance))
+    else:
+        # esecuzione singolo video
+        create_traj_json(video_json_path=args.input, i_start=int(args.start), point_past=int(args.past),
+                         point_future=int(args.future), origin_distance=int(args.origin_distance), dest_folder=args.dest)
 
 
 if __name__ == '__main__':

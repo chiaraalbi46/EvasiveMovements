@@ -1,14 +1,14 @@
-'''
+"""
 Recupero delle coordinate e dell'angolo di rotazione della camera per ogni frame e creazione del file json
 associato al video in esame con queste informazioni.
-'''
+"""
 
-import sys
 import pyzed.sl as sl
 import json
 import os
 import argparse
 import platform
+from configs.config import cfg
 
 
 def write_json(data, filename):
@@ -148,7 +148,7 @@ def folder_process(folder, dest_folder, step):
     for d in dirs:
         print("Subdir: ", d)
         sub_dir = os.listdir(folder + d)
-        dest_path = dest_folder + d
+        # dest_path = dest_folder + d
         # print("Dest path: ", dest_path)
         for s in sub_dir:
             # print('\t', s)
@@ -163,8 +163,12 @@ def folder_process(folder, dest_folder, step):
 def main():
     parser = argparse.ArgumentParser(description="Create the trajectories' file from a json file of a video sequence")
 
-    parser.add_argument("--video", dest="input", default=None, help="Path of the svo video")
-    parser.add_argument("--dest", dest="dest", default=None,
+    # parser.add_argument("--video", dest="input", default=None, help="Path of the svo video")
+    # parser.add_argument("--dest", dest="dest", default=None,
+    #                     help="Path to the destination folder for the video json file")
+
+    parser.add_argument("--video", dest="input", default=cfg.SVO_DATASET_PATH, help="Path of the svo video")
+    parser.add_argument("--dest", dest="dest", default=cfg.DATASET_PATH['original'],
                         help="Path to the destination folder for the video json file")
     parser.add_argument("--step", dest="step", default=10, help="Sampling rate")
 
