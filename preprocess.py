@@ -53,7 +53,7 @@ def main(folder):  # images_dataset
             preprocess_frames(vid_path)
             # proc_path = right_slash(os.path.join(process_folder, d, s))
             # print("\t Video processed folder path: ", proc_path)
-            # preprocess_frames(vid_path, proc_path)
+            preprocess_frames(vid_path)
 
 
 if __name__ == '__main__':
