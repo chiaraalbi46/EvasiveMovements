@@ -56,9 +56,9 @@ def main():
             #     args.model_type] + "weight_" + args.epochs + '_lenseq_' + str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
             #     timestamp)
             # todo aggiungere if se si fa in locale per path
-            save_weight_path = cfg.SAVE_WEIGHT_PATH[args.model_type] + 'weight_' + args.epochs + '_lenseq_' + str(
-                cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
-                timestamp)
+            # save_weight_path = cfg.SAVE_WEIGHT_PATH[args.model_type] + 'weight_' + args.epochs + '_lenseq_' + str(
+            #     cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
+            #     timestamp)
             tensor_board_path = cfg.TENSORBOARD_PATH[
                                     args.model_type] + "weight_" + args.epochs + '_lenseq_' + str(
                 cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
