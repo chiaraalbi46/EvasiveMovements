@@ -31,6 +31,10 @@ def load_data_singleframe(csv_path, len_sequence):
         if os.path.exists(path_frame[i]):
             images_c[i] = load_image(image_file=path_frame[i])
             tensor_list[i] = convert_to_vector(string=data_df["future_point"][i])
+
+    # da  [batch_size, depth, height, width, channels] in [batch_size, channels, depth, height, width] per nn.Conv2
+    images_c = np.moveaxis(images_c, -1, 1)
+
     # TODO: poi fare anche per i punti del passato
     # TODO: capire
     #         train_images = np.moveaxis(imm_train, -1, 1)
