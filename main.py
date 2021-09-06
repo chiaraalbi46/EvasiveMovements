@@ -1,4 +1,4 @@
-from  load_dataset import load_data_singleframe
+from load_dataset import load_data_singleframe
 import torch, argparse, os
 from train import train
 from test import test
@@ -9,7 +9,8 @@ import numpy as np
 from datetime import datetime
 from initialize_model import initialize_model
 
-#todo fare config con path locali
+
+# todo fare config con path locali
 ########################################################################################################################
 # STARTING THE RAINING OF THE NET
 ########################################################################################################################
@@ -29,18 +30,16 @@ def main():
 
     args = parser.parse_args()
 
-    if (args.train == None and args.test == None):
+    if args.train is None and args.test is None:
         print("you have to decide : do train or test")
         exit()
-
-
 
     ####################################################################################################################
     # TRAIN PHASE
     ####################################################################################################################
-    if args.test == None:
+    if args.test is None:
 
-        if (args.valid == None):
+        if args.valid is None:
             print("please insert valid")
             exit()
         else:
@@ -48,7 +47,7 @@ def main():
             # current date and time
             now = datetime.now()
             timestamp = datetime.timestamp(now)
-            #dir_name = os.path.dirname(os.path.abspath(__file__))  # path a EvaisveM.
+            # dir_name = os.path.dirname(os.path.abspath(__file__))  # path a EvaisveM.
 
             # save_weight_path = dir_name + cfg.SAVE_WEIGHT_PATH[
             #     args.model_type] + 'weight_' + args.epochs + '_lenseq_' + str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
@@ -56,11 +55,13 @@ def main():
             # tensor_board_path = dir_name + cfg.TENSORBOARD_PATH[
             #     args.model_type] + "weight_" + args.epochs + '_lenseq_' + str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
             #     timestamp)
-            #todo aggiungere if se si fa in locale per path
-            save_weight_path = cfg.SAVE_WEIGHT_PATH[args.model_type] + 'weight_' + args.epochs + '_lenseq_' + str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
-                    timestamp)
+            # todo aggiungere if se si fa in locale per path
+            save_weight_path = cfg.SAVE_WEIGHT_PATH[args.model_type] + 'weight_' + args.epochs + '_lenseq_' + str(
+                cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
+                timestamp)
             tensor_board_path = cfg.TENSORBOARD_PATH[
-                args.model_type] + "weight_" + args.epochs + '_lenseq_' + str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
+                                    args.model_type] + "weight_" + args.epochs + '_lenseq_' + str(
+                cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
                 timestamp)
 
             print()
@@ -90,14 +91,14 @@ def main():
             if not os.path.exists(tensor_board_path):
                 os.mkdir(tensor_board_path)
 
-
-##### todo
+            ##### todo
             # train_images, valid_images, train_coordinates, valid_coordinates = load_dataset(
             #     len_sequence=cfg.TRAIN.LEN_SEQUENCES, model_type=args.model_type, train_path=args.train,
             #     valid_path=args.valid)
-            train_images, train_coordinates, _ = load_data_singleframe(csv_path=args.train, len_sequence=cfg.TRAIN.LEN_SEQUENCES)
-            valid_images, valid_coordinates, _ = load_data_singleframe(csv_path=args.valid, len_sequence=cfg.TRAIN.LEN_SEQUENCES)
-
+            train_images, train_coordinates, _ = load_data_singleframe(csv_path=args.train,
+                                                                       len_sequence=cfg.TRAIN.LEN_SEQUENCES)
+            valid_images, valid_coordinates, _ = load_data_singleframe(csv_path=args.valid,
+                                                                       len_sequence=cfg.TRAIN.LEN_SEQUENCES)
 
             model, criterion, optimizer = initialize_model(model_type=args.model_type, cfg=cfg, mode='train')
 
@@ -117,8 +118,8 @@ def main():
     # TEST PHASE
     ####################################################################################################################
 
-    if args.train == None:
-        if (args.model == None):
+    if args.train is None:
+        if args.model is None:
             print("please insert the path to load the model for the test")
             exit()
         else:
@@ -140,7 +141,7 @@ def main():
                 os.mkdir(cfg.SAVE_RESULTS_PATH)
 
             test_images, test_coordinates, image_path = load_data_singleframe(csv_path=args.test,
-                                                                     len_sequence=cfg.TEST.LEN_SEQUENCES)
+                                                                              len_sequence=cfg.TEST.LEN_SEQUENCES)
 
             model, criterion = initialize_model(model_type=args.model_type, cfg=cfg, mode='test')
 
@@ -149,7 +150,7 @@ def main():
             test_loader = DataLoader(test_data, shuffle=cfg.TEST.SHUFFLE, batch_size=cfg.TEST.BATCH_SIZE,
                                      drop_last=True)
 
-            #dir_name = os.path.dirname(os.path.abspath(__file__))
+            # dir_name = os.path.dirname(os.path.abspath(__file__))
 
             test(model=model, criterion=criterion, model_path=args.model, test_loader=test_loader,
                  paths=image_path, dev=args.device, model_type=args.model_type)
