@@ -137,8 +137,8 @@ def main():
             print("you are working with {} model".format(args.model_type))
             print()
 
-            if not os.path.exists(cfg.SAVE_RESULTS_PATH[args.model_type]):
-                os.mkdir(cfg.SAVE_RESULTS_PATH[args.model_type])
+            # if not os.path.exists(cfg.SAVE_RESULTS_PATH):
+            #     os.mkdir(cfg.SAVE_RESULTS_PATH)
 
             test_images, test_coordinates, image_path = load_data_singleframe(csv_path=args.test,
                                                                               len_sequence=cfg.TEST.LEN_SEQUENCES)
