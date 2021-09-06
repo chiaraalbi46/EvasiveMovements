@@ -43,7 +43,7 @@ def test(model, criterion, model_path, test_loader, paths, dev, model_type):
                 for i in range(len(output)):
                     predicted = output[i].detach().numpy()
                     real = labels[i].detach().numpy()
-                    path = paths[current_path].replace("images_dataset_processed", "images_dataset")
+                    path = paths[current_path].replace("left_frames_processed", "left_frames")
                     lines = [path, predicted.tolist(), real.tolist()]
                     filewriter.writerow(lines)
                     current_path += 1
