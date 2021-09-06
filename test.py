@@ -4,7 +4,12 @@ import torch
 # from trajectory_images import save_video
 from configs.config import cfg
 import numpy as np
-from create_video_json import write_json
+import json
+
+
+def write_json(data, filename):
+    with open(filename, 'w') as f:
+        json.dump(data, f, indent=4)
 
 
 # def test(model, criterion, model_path, test_loader, paths, dev, model_type):
