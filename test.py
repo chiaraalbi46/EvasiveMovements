@@ -49,7 +49,7 @@ def test(test_loader, paths, dev, model_type):
             array_json.append(dict_frame)
             current_path += 1
 
-    write_json(array_json, '/home/aivdepth/PROVA_OUTPUT_TEST.json')  #
+    write_json(array_json, '/home/aivdepth/PROVA_OUTPUT_TEST1.json')  #
 
     # with open(csv_file, 'w') as result_file:
         # with torch.no_grad():
