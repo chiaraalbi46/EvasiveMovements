@@ -60,7 +60,7 @@ def create_csv(config_path, config_f, data_type, len_seq):
                 elif 100 <= ind_frame < 1000:
                     name = 'frame0' + str(ind_frame)
 
-                img_path = right_slash(os.path.join(path, "left_frames/", name + '.png'))
+                img_path = right_slash(os.path.join(path, "left_frames_processed/", name + '.png'))
                 # if platform.system() is 'Windows' and '\\' in img_path:
                 #     img_path = img_path.replace('\\', '/')
                 #     print("path traformato: ", img_path)
