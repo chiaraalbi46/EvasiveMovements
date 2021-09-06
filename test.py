@@ -39,16 +39,17 @@ def test(test_loader, paths, dev, model_type):
         print("INPUTS: ", inputs)
         print("LABELS: ", labels)
         for i in range(len(inputs)):
-            real = np.asarray(labels[i].detach().numpy())
+            real = (labels[i].detach().numpy()).tolist()
             path = paths[current_path].replace("left_frames_processed", "left_frames")
 
             # lines = [path, predicted.tolist(), real.tolist()]
             # filewriter.writerow(lines)
             dict_frame = {'Ind': i, 'real': real, 'path': path}
+            print("DICT: ", dict_frame)
             array_json.append(dict_frame)
             current_path += 1
 
-    write_json(array_json, '/home/aivdepth/PROVA_OUTPUT_TEST.json')
+    write_json(array_json, '/home/aivdepth/PROVA_OUTPUT_TEST.json')  #
 
     # with open(csv_file, 'w') as result_file:
         # with torch.no_grad():
