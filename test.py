@@ -39,7 +39,7 @@ def test(test_loader, paths, dev, model_type):
         print("INPUTS: ", inputs)
         print("LABELS: ", labels)
         for i in range(len(inputs)):
-            real = labels[i]  # .detach().numpy()
+            real = labels[i].detach().numpy()
             path = paths[current_path].replace("left_frames_processed", "left_frames")
 
             # lines = [path, predicted.tolist(), real.tolist()]
