@@ -1,13 +1,13 @@
-from load_dataset import load_data_singleframe
-import torch, argparse, os
-from train import train
-from test import test
-import configs.config as cfg
-from torch.utils.data import TensorDataset, DataLoader
-from torch.autograd import Variable
-import numpy as np
 from datetime import datetime
+import argparse
+import os
+import torch
+from torch.utils.data import TensorDataset, DataLoader
+from configs.config import cfg
 from initialize_model import initialize_model
+from load_dataset import load_data_singleframe
+from test import test
+from train import train
 
 
 # todo fare config con path locali
@@ -56,13 +56,13 @@ def main():
             #     args.model_type] + "weight_" + args.epochs + '_lenseq_' + str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
             #     timestamp)
             # todo aggiungere if se si fa in locale per path
-            # save_weight_path = cfg.SAVE_WEIGHT_PATH[args.model_type] + 'weight_' + args.epochs + '_lenseq_' + str(
-            #     cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
-            #     timestamp)
+
+            save_weight_path = cfg.SAVE_WEIGHT_PATH[args.model_type] + 'weight_' + args.epochs + '_lenseq_' + str(
+                cfg.TRAIN.LEN_SEQUENCES) + '_' + str(timestamp)
+
             tensor_board_path = cfg.TENSORBOARD_PATH[
-                                    args.model_type] + "weight_" + args.epochs + '_lenseq_' + str(
-                cfg.TRAIN.LEN_SEQUENCES) + '_' + str(
-                timestamp)
+                                    args.model_type] + "weight_" + args.epochs + '_lenseq_' + \
+                                str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(timestamp)
 
             print()
             print("SUMMARIZE : ")
