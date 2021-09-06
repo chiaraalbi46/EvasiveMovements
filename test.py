@@ -2,7 +2,7 @@ import os
 import csv
 import torch
 # from trajectory_images import save_video
-from configs import config as cfg
+from configs.config import cfg
 import numpy as np
 
 
