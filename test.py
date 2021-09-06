@@ -19,7 +19,8 @@ def test(model, criterion, model_path, test_loader, paths, dev, model_type):
 
     model.load_state_dict(torch.load(model_path))
 
-    device = torch.device('cuda:' + str(dev))
+    # device = torch.device('cuda:' + str(dev))
+    device = torch.device('cuda')
     model.to(device)
     model.eval()
 
