@@ -119,10 +119,10 @@ def main():
     ####################################################################################################################
 
     if args.train is None:
-        # if args.model is None:
-        #     print("please insert the path to load the model for the test")
-        #     exit()
-        # else:
+        if args.model is None:
+            print("please insert the path to load the model for the test")
+            exit()
+        else:
 
             print()
             print("SUMMARIZE : ")
@@ -143,19 +143,17 @@ def main():
             test_images, test_coordinates, image_path = load_data_singleframe(csv_path=args.test,
                                                                               len_sequence=cfg.TEST.LEN_SEQUENCES)
 
-            # model, criterion = initialize_model(model_type=args.model_type, cfg=cfg, mode='test')
+            model, criterion = initialize_model(model_type=args.model_type, cfg=cfg, mode='test')
 
             test_data = TensorDataset(torch.from_numpy(test_images), torch.from_numpy(test_coordinates))
 
             test_loader = DataLoader(test_data, shuffle=cfg.TEST.SHUFFLE, batch_size=cfg.TEST.BATCH_SIZE,
                                      drop_last=True)
 
-            # dir_name = os.path.dirname(os.path.abspath(__file__))
-
-            # test(model=model, criterion=criterion, model_path=args.model, test_loader=test_loader,
-            #      paths=image_path, dev=args.device, model_type=args.model_type)
-            test(test_loader=test_loader,
+            test(model=model, criterion=criterion, model_path=args.model, test_loader=test_loader,
                  paths=image_path, dev=args.device, model_type=args.model_type)
+            # test(test_loader=test_loader,
+            #      paths=image_path, dev=args.device, model_type=args.model_type)
 
 
 if __name__ == '__main__':
