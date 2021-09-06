@@ -66,7 +66,7 @@ __C.TRAIN.DEC_PERIOD = 20
 # Len_sequence : define the lenght of the sequence to predict
 # Shuffle: indicates if the images have to be shuffle
 #
-__C.TRAIN.LEN_SEQUENCES = 30
+__C.TRAIN.LEN_SEQUENCES = 10  # 30
 __C.TRAIN.SHUFFLE_T = True
 __C.TRAIN.SHUFFLE_V = False
 
@@ -122,7 +122,7 @@ __C.TEST.LOSS = 'MSE'
 # Len_sequence : define the lenght of the sequence to predict
 # Shuffle: indicates if the images have to be shuffle
 #
-__C.TEST.LEN_SEQUENCES = 30
+__C.TEST.LEN_SEQUENCES = 10
 __C.TEST.SHUFFLE = False
 
 # #####################################################################################################################################
