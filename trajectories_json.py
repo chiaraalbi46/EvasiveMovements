@@ -1,7 +1,6 @@
 import argparse
 import json
 import os
-import numpy as np
 import math
 from create_csv_file import right_slash
 
@@ -11,12 +10,27 @@ def write_json(data, filename):
         json.dump(data, f, indent=4)
 
 
+def transform_RT(xdata, zdata, i, origin, angle_o, f, count):
+    # Rotazione (angolo in radianti)
+    x_rot = (xdata[i + count] - origin[f][0]) * math.cos(angle_o[f]) - (
+            zdata[i + count] - origin[f][1]) * math.sin(angle_o[f])
+    y_rot = (xdata[i + count] - origin[f][0]) * math.sin(angle_o[f]) + (
+            zdata[i + count] - origin[f][1]) * math.cos(angle_o[f])
+    print('i', i, 'count', count)
+    # Traslazione
+    x_rot_t = x_rot + origin[f][0]
+    y_rot_t = y_rot + origin[f][1]
+    new_point = [x_rot_t, y_rot_t]
+    new_point[0] = round(x_rot_t, 3)
+    new_point[1] = round(y_rot_t, 3)
+    return new_point
+
+
 # array origine
 def origin_traj(i_start, xdata, zdata, angle, origin_distance):
     # Origini
     origin = []
     angle_o = []
-    # i_start = 0 # posso cambiare il punto di partenza
     while i_start < len(xdata):
         origin.append([xdata[i_start], zdata[i_start]])
         angle_o.append(angle[i_start])
@@ -25,18 +39,14 @@ def origin_traj(i_start, xdata, zdata, angle, origin_distance):
 
 
 def create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, dest_folder):
-    point_future = point_future + 1  # aggiungo punto futuro (origine esclude)
+
+    point_future = point_future + 1  # +1 punto futuro (origine da escludere)
+
     with open(video_json_path) as json_file:
         d = json.load(json_file)
         xdata = []
         zdata = []
         angle = []
-
-        # # Controllo sul numero dei punti_future che ha l'ultimo origine
-        # num_origin = int((len(d) / sample) / point_future)  # (per eccesso)
-        # point_end = int((len(d) / sample) - (point_future * num_origin))  # punti ultima origine
-        # point_add = point_future - point_end - 1  # punti che mancano nell'ultimo origine per arrivare a future
-        # # -1 tolgo origine
 
         # step = 0
         for i in range(len(d)):
@@ -45,14 +55,8 @@ def create_traj_json(video_json_path, i_start, point_past, point_future, origin_
             zdata.append(d[i]['cords'][2])
             angle.append(d[i]['angle'])
             #     step += sample
-            # elif point_add > 0 and step == (i + 1):  # aggiungo il frame successivo a quello step = i
-            #     xdata.append(d[i]['cords'][0])
-            #     zdata.append(d[i]['cords'][2])  # dipende da quanti punti campiono
-            #     angle.append(d[i]['angle'])
-            #     point_add -= 1
 
-        # angolo dei soli origini
-
+    # angolo dei soli origini
     origin, angle_o = origin_traj(i_start, xdata, zdata, angle, origin_distance)  # crea origini
 
     # futuro, presente, passato
@@ -65,44 +69,19 @@ def create_traj_json(video_json_path, i_start, point_past, point_future, origin_
     f = 0
     for i in range(len(xdata)):
         if xdata[i] == origin[f][0] and zdata[i] == origin[f][1] and f < len(origin) - 1 and i % origin_distance == 0:
-
             present.append(origin[f])
-            # print('i', i , 'data', xdata[i], zdata[i], 'origin',  origin[f] )
 
             # Punti futuri
             count_future = 1
             while count_future < point_future and i + count_future < len(xdata):
-                # Rotazione        #angolo in radianti
-                x_rot = (xdata[i + count_future] - origin[f][0]) * math.cos(angle_o[f]) - (
-                        zdata[i + count_future] - origin[f][1]) * math.sin(angle_o[f])
-                y_rot = (xdata[i + count_future] - origin[f][0]) * math.sin(angle_o[f]) + (
-                        zdata[i + count_future] - origin[f][1]) * math.cos(angle_o[f])
-
-                # traslazione
-                x_rot_t = x_rot + origin[f][0]
-                y_rot_t = y_rot + origin[f][1]
-                new_point = [x_rot_t, y_rot_t]
-                new_point[0] = round(x_rot_t, 3)
-                new_point[1] = round(y_rot_t, 3)
+                new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, count_future)
                 future.append(new_point)
                 count_future += 1
-            # print('Futrue', future)
 
             # Punti passati
-            count = point_past  # numero punti del passato
+            count = point_past
             while i - count > 0 and count > 0:
-                # Rotazione
-                x_rot = (xdata[i - count] - origin[f][0]) * math.cos(angle_o[f]) - (
-                        zdata[i - count] - origin[f][1]) * math.sin(angle_o[f])
-                y_rot = (xdata[i - count] - origin[f][0]) * math.sin(angle_o[f]) + (
-                        zdata[i - count] - origin[f][1]) * math.cos(angle_o[f])
-
-                # Traslazione
-                x_rot_t = x_rot + origin[f][0]
-                y_rot_t = y_rot + origin[f][1]
-                new_point = [x_rot_t, y_rot_t]
-                new_point[0] = round(x_rot_t, 2)
-                new_point[1] = round(y_rot_t, 2)
+                new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, (-count))
                 past.append(new_point)
                 count -= 1
 
@@ -123,17 +102,13 @@ def create_traj_json(video_json_path, i_start, point_past, point_future, origin_
         vid_name = spl[len(spl) - 1]
         spl1 = vid_name.split('.')
         vname = spl1[0]
-        # print(vname)
         final_name = vname + '_traj.json'
         pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
-        # #print(pathToTrajFile)
-        # pathToTrajFile = 'C:/Users/ninad/Desktop/video_guida/json/video.json'
+
         write_json(array, pathToTrajFile)
 
 
 # folder = 'D:\Dataset_Evasive_Movements\datasets\images_dataset\'
-
-
 def folder_process(folder, i_start, point_past, point_future, origin_distance):
     print(folder)
     print(os.listdir(folder))
