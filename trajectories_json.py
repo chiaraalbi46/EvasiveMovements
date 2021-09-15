@@ -39,7 +39,7 @@ def origin_traj(i_start, xdata, zdata, angle, origin_distance):
     return origin, angle_o
 
 
-def create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, dest_folder):
+def create_traj_json(video_json_path, step, i_start, point_past, point_future, origin_distance, dest_folder):
 
     point_future = point_future + 1  # +1 punto futuro (origine da escludere)
 
@@ -87,7 +87,7 @@ def create_traj_json(video_json_path, i_start, point_past, point_future, origin_
                 count -= 1
 
             if len(past) == point_past and len(future) == point_future - 1:  # se hanno meno punti non salvo
-                dic_traj['Frame'] = i  # indice dell'origine
+                dic_traj['Frame'] = i * step # indice dell'origine
                 dic_traj['Past'] = past
                 dic_traj['Present'] = present
                 dic_traj['Future'] = future
@@ -131,6 +131,8 @@ def main():
 
     parser.add_argument("--video_json_path", dest="input", default=None, help="Path of the json file of a video")
     parser.add_argument("--i_start", dest="start", default=0, help="Initial system origin")
+    parser.add_argument("--step", dest="step", default=10, help="Step")
+
     parser.add_argument("--point_past", dest="past", default=5,
                         help="Number of past points to remap in the new reference system")
     parser.add_argument("--point_future", dest="future", default=30,
