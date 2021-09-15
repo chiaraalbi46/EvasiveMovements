@@ -25,7 +25,7 @@ def main(videos_file):
         win = 1
     else:
         zed_path = '../../../usr/local/zed/tools/ZED_SVO_Editor'
-        path_video_new = "../Video_dataset/svo/cut/"
+        path_video_new = "../Video_dataset/svo_cut/"
 
     if os.path.exists(path_video_new):
         print("La cartella e' gia' presente")
