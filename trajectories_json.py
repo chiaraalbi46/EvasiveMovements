@@ -16,7 +16,7 @@ def transform_RT(xdata, zdata, i, origin, angle_o, f, count):
             zdata[i + count] - origin[f][1]) * math.sin(angle_o[f])
     y_rot = (xdata[i + count] - origin[f][0]) * math.sin(angle_o[f]) + (
             zdata[i + count] - origin[f][1]) * math.cos(angle_o[f])
-   # print('i', i, 'count', count)
+    # print('i', i, 'count', count)
     # Traslazione
     x_rot_t = x_rot + origin[f][0]
     y_rot_t = y_rot + origin[f][1]
@@ -44,7 +44,6 @@ def origin_traj(i_start, xdata, zdata, angle, origin_distance, frame_index):
 
 
 def create_traj_json(video_json_path, step, i_start, point_past, point_future, origin_distance, dest_folder):
-
     point_future = point_future + 1  # +1 punto futuro (origine da escludere)
 
     with open(video_json_path) as json_file:
@@ -61,7 +60,8 @@ def create_traj_json(video_json_path, step, i_start, point_past, point_future, o
             frame_index.append(d[i]['Frame'])
 
     # angolo dei soli origini
-    origin, angle_o, origin_index, origine_i = origin_traj(i_start, xdata, zdata, angle, origin_distance, frame_index)  # crea origini
+    origin, angle_o, origin_index, origine_i = origin_traj(i_start, xdata, zdata, angle, origin_distance,
+                                                           frame_index)  # crea origini
 
     # futuro, presente, passato
     future = []
@@ -73,7 +73,8 @@ def create_traj_json(video_json_path, step, i_start, point_past, point_future, o
     f = 0
     for i in range(len(xdata)):
 
-       if origine_i[f] == i and f < len(origin) - 1 : #(i*step ) == origin_index[f] , and xdata[i] == origin[f][0] and zdata[i] == origin[f][1] and f < len(origin) - 1 :#and frame_index[i] % origin_distance == 0:
+        if origine_i[f] == i and f < len(
+                origin) - 1:  # (i*step ) == origin_index[f] , and xdata[i] == origin[f][0] and zdata[i] == origin[f][1] and f < len(origin) - 1 :#and frame_index[i] % origin_distance == 0:
             present.append(origin[f])
 
             # Punti futuri
@@ -85,14 +86,14 @@ def create_traj_json(video_json_path, step, i_start, point_past, point_future, o
 
             # Punti passati
             count = point_past
-            while i - count >= 0 and count > 0:# and i - count != 0:
+            while i - count >= 0 and count > 0:  # and i - count != 0:
 
                 new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, (-count))
                 past.append(new_point)
                 count -= 1
 
             if len(past) == point_past and len(future) == point_future - 1:  # se hanno meno punti non salvo
-                dic_traj['Frame'] = origin_index[f] # indice dell'origine
+                dic_traj['Frame'] = origin_index[f]  # indice dell'origine
                 dic_traj['Past'] = past
                 dic_traj['Present'] = present
                 dic_traj['Future'] = future
@@ -104,16 +105,17 @@ def create_traj_json(video_json_path, step, i_start, point_past, point_future, o
             past = []
             f += 1
 
-       spl = video_json_path.split(os.sep)  # '/'
-       vid_name = spl[len(spl) - 1]
-       spl1 = vid_name.split('.')
-       vname = spl1[0]
-       final_name = vname + '_traj.json'
-       pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
+        spl = video_json_path.split(os.sep)  # '/'
+        vid_name = spl[len(spl) - 1]
+        spl1 = vid_name.split('.')
+        vname = spl1[0]
+        final_name = vname + '_traj.json'
+        pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
 
-       write_json(array, pathToTrajFile)
+        write_json(array, pathToTrajFile)
     # for i in range(len(array)):
     #    print(array[i], '\n')
+
 
 # folder = 'D:\Dataset_Evasive_Movements\datasets\images_dataset\'
 def folder_process(folder, step, i_start, point_past, point_future, origin_distance):
@@ -160,7 +162,8 @@ def main():
     else:
         # esecuzione singolo video
         create_traj_json(video_json_path=args.input, step=args.step, i_start=int(args.start), point_past=int(args.past),
-                         point_future=int(args.future), origin_distance=int(args.origin_distance), dest_folder=args.dest)
+                         point_future=int(args.future), origin_distance=int(args.origin_distance),
+                         dest_folder=args.dest)
 
 
 if __name__ == '__main__':
