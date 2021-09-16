@@ -34,7 +34,7 @@ def load_data_singleframe(csv_path, len_sequence):
     tensor_list = np.zeros([data_dimension, len_sequence, 2])
     # array_json = []
     for i in range(data_dimension):
-        # if os.path.exists(path_frame[i]):
+        if os.path.exists(path_frame[i]):
             images_c[i] = load_image(image_file=path_frame[i])
             tensor_list[i] = convert_to_vector(string=data_df["future_point"][i])
             # dict_frame = {'Ind': i, 'real': tensor_list[i].tolist(), 'path': path_frame[i]}
@@ -42,7 +42,6 @@ def load_data_singleframe(csv_path, len_sequence):
             # array_json.append(dict_frame)
 
     # write_json(array_json, 'PROVA_OUTPUT_TEST.json')  #
-
 
     # da  [batch_size, depth, height, width, channels] in [batch_size, channels, depth, height, width] per nn.Conv2
     images_c = np.moveaxis(images_c, -1, 1)
