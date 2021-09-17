@@ -3,9 +3,9 @@ import pandas as pd
 from load_dataset import convert_to_vector
 import matplotlib.pyplot as plt
 from comet_ml import Experiment
-import matplotlib as mpl
-
-mpl.use('Agg')
+# import matplotlib as mpl
+#
+# mpl.use('Agg')
 
 
 def plot_traj(csv_path):

@@ -11,7 +11,7 @@ from test import test
 from train_comet import train
 
 
-experiment = Experiment(project_name="EvasiveMovements")
+experiment = Experiment(project_name="evasive")
 
 # todo fare config con path locali
 ########################################################################################################################
