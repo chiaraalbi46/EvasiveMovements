@@ -35,9 +35,9 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
     val_losses = {}
     train_losses = {}
 
-    # device = torch.device('cuda:' + dev)
+    device = torch.device('cuda:' + dev)
     # device = torch.device('cuda')
-    device = torch.device("cpu")
+    # device = torch.device("cpu")
 
     torch.cuda.reset_max_memory_allocated(device)
     model.to(device)
