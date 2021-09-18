@@ -89,7 +89,7 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 writer.add_scalar('Training/train_loss_value', loss.item(), iteration)
 
                 # comet ml
-                exp.log_metric('train_loss_value', loss.item(), step=iteration)
+                exp.log_metric('train_loss_value', loss.item(), step=iteration)  # loss iteration (batch)
 
                 iteration += 1
 

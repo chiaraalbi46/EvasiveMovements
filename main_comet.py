@@ -119,6 +119,8 @@ def main():
 
             model, criterion, optimizer = initialize_model(model_type=args.model_type, cfg=cfg, mode='train')
 
+            experiment.set_model_graph(model)
+
             train_data = TensorDataset(torch.from_numpy(train_images), torch.from_numpy(train_coordinates))
             val_data = TensorDataset(torch.from_numpy(valid_images), torch.from_numpy(valid_coordinates))
 
