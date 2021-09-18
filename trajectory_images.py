@@ -77,6 +77,7 @@ def plot_data(real, predicted, experiment, k, l, path, it):
 
     experiment.log_figure(figure_name=name, figure=plt, step=l)
     plt.figure().clear()
+    plt.close()
     # plt.show()
 
 
