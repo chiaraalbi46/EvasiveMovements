@@ -39,7 +39,8 @@ def plot_traj(csv_path):
     plt.show()
 
 
-def plot_data(real, predicted, experiment, k, l, path, epoch, type_name):  # plotta singole 'righe' csv (real, predicted)
+# def plot_data(real, predicted, experiment, k, l, path, epoch, type_name):  # plotta singole 'righe' csv (real, predicted)
+def plot_data(real, predicted, experiment, k, l, path, it):
     ax = plt.axes()
 
     plt.plot(real[:, 0], real[:, 1], color="green", marker=".")
@@ -57,7 +58,15 @@ def plot_data(real, predicted, experiment, k, l, path, epoch, type_name):  # plo
     # plt.ylim([1, -80])
     # plt.xlim([-10, 70])
     plt.gca().invert_yaxis()  # origine asse z (y) in basso a sinistra
-    name = epoch  # + type_name + 'fig_' + str(k)
+    # name = epoch  # + type_name + 'fig_' + str(k)
+    name = 'it_' + str(it) + '_fig_' + str(k)
+
+    if k < 10:
+        name = 'it_' + str(it) + '_fig_000' + str(k)
+    elif 10 <= k < 100:
+        name = 'it_' + str(it) + '_fig_00' + str(k)
+    elif 100 <= k < 1000:
+        name = 'it_' + str(it) + '_fig_0' + str(k)
 
     # if k < 10:
     #     name = epoch + type_name + 'fig_000' + str(k)
