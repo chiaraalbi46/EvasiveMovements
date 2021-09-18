@@ -41,6 +41,8 @@ def plot_traj(csv_path):
 
 # def plot_data(real, predicted, experiment, k, l, path, epoch, type_name):  # plotta singole 'righe' csv (real, predicted)
 def plot_data(real, predicted, experiment, k, l, path, it):
+    fig = plt.figure()
+
     ax = plt.axes()
 
     plt.plot(real[:, 0], real[:, 1], color="green", marker=".")
@@ -76,8 +78,9 @@ def plot_data(real, predicted, experiment, k, l, path, it):
     #     name = epoch + type_name + 'fig_0' + str(k)
 
     experiment.log_figure(figure_name=name, figure=plt, step=l)
-    plt.figure().clear()
-    plt.close()
+    # plt.figure().clear()
+    fig.clear()
+    plt.close(fig)
     # plt.show()
 
 
