@@ -11,8 +11,6 @@ from test import test
 from train_comet import train
 
 
-experiment = Experiment(project_name="evasive")
-
 # todo fare config con path locali
 ########################################################################################################################
 # STARTING THE RAINING OF THE NET
@@ -30,8 +28,15 @@ def main():
     parser.add_argument("--device", dest="device", default='0', help="choose GPU")
     parser.add_argument("--model_type", dest="model_type", default='single',
                         help="define the model to use: sigle-frame, multi-frame or depth")
+    parser.add_argument("--proj_exp", dest="name_proj", default='evasive',
+                        help="define comet ml project folder")
+    parser.add_argument("--name_exp", dest="name_exp", default=None,
+                        help="define comet ml experiment")
 
     args = parser.parse_args()
+
+    experiment = Experiment(project_name=args.name_proj)
+    experiment.set_name(args.name_exp)
 
     if args.train is None and args.test is None:
         print("you have to decide : do train or test")

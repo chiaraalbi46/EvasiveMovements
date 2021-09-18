@@ -44,114 +44,117 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
 
     print()
     print("Starting training the model")
+    with exp.train():
+        for i in range(epochs):
 
-    for i in range(epochs):
+            print('*' * 100)
+            print("Epoch : {}".format(i + 1))
 
-        print('*' * 100)
-        print("Epoch : {}".format(i + 1))
-        model.train()
-        scheduler = StepLR(optimizer, step_size=cfg.TRAIN.DEC_PERIOD, gamma=cfg.TRAIN.GAMMA)
+            exp.set_epoch(i+1)
 
-        # per plot comet ml
-        epoca = 'ep_' + str(i) + '_'
-        type_name = 'train_'
+            model.train()
+            scheduler = StepLR(optimizer, step_size=cfg.TRAIN.DEC_PERIOD, gamma=cfg.TRAIN.GAMMA)
 
-        current_path = 0
-        for image, labels in train_loader:
-            optimizer.zero_grad()
-
-            train_inputs = image.to(device).float()
-            out = model(train_inputs, device)
-
-            loss = criterion(out, labels.float())
-
-            if i in train_losses:
-                train_losses[i].append(loss.item())
-            else:
-                train_losses[i] = [loss.item()]
-
-            for k in range(len(out)):
-                predicted = out[k].detach().numpy()
-                real = labels[k].detach().numpy()
-                path = train_p[current_path].replace("left_frames_processed", "left_frames")
-                plot_data(real, predicted, exp, k, iteration, path, epoca, type_name)  # k, l, path
-                current_path += 1
-
-            # tensorboard utilities
-            writer.add_scalar('Training/train_loss_value', loss.item(), iteration)
-
-            # comet ml
-            exp.log_metric('train_loss_value', loss.item(), step=iteration)
-
-            iteration += 1
-
-            # compute gradients and optimizer step
-            loss.backward()
-            nn.utils.clip_grad_norm_(model.parameters(), cfg.TRAIN.GRADIENT_CLIP)
-            optimizer.step()
-
-        writer.add_scalar('Training/train_global_loss', sum(train_losses[i]) / len(train_losses[i]), i + 1)
-
-        # comet ml
-        exp.log_metric('train_global_loss', sum(train_losses[i]) / len(train_losses[i]), step=i + 1)  # loss  epoca
-
-        print("Epoch: {}/{}".format(i + 1, epochs),
-              "Loss : {}".format(sum(train_losses[i]) / len(train_losses[i])))
-
-        #### Validation step
-
-        if (i + 1) % val_period == 0:
-
-            print()
-            print("Starting valid test")
-            model.eval()
-
-            type_name = 'val_'
+            # per plot comet ml
+            epoca = 'ep_' + str(i + 1) + '_'
+            type_name = 'train_'
 
             current_path = 0
-            with torch.no_grad():
+            for image, labels in train_loader:
+                optimizer.zero_grad()
 
-                for val_image, val_labels in val_loader:
+                train_inputs = image.to(device).float()
+                out = model(train_inputs, device)
 
-                    val_image = val_image.to(device)
-                    val_out = model(val_image.float(), device)
+                loss = criterion(out, labels.float())
 
-                    val_loss = criterion(val_out, val_labels.float())
+                if i in train_losses:
+                    train_losses[i].append(loss.item())
+                else:
+                    train_losses[i] = [loss.item()]
 
-                    if i in val_losses:
-                        val_losses[i].append(val_loss.item())
-                    else:
-                        val_losses[i] = [val_loss.item()]
+                for k in range(len(out)):
+                    predicted = out[k].detach().numpy()
+                    real = labels[k].detach().numpy()
+                    path = train_p[current_path].replace("left_frames_processed", "left_frames")
+                    plot_data(real, predicted, exp, k, iteration, path, epoca, type_name)  # k, l, path
+                    current_path += 1
 
-                    for k in range(len(val_out)):
-                        val_predicted = val_out[k].detach().numpy()
-                        val_real = val_labels[k].detach().numpy()
+                # tensorboard utilities
+                writer.add_scalar('Training/train_loss_value', loss.item(), iteration)
 
-                        val_path = val_p[current_path].replace("left_frames_processed", "left_frames")
+                # comet ml
+                exp.log_metric('train_loss_value', loss.item(), step=iteration)
 
-                        plot_data(val_real, val_predicted, exp, k, iteration, val_path, epoca, type_name)
+                iteration += 1
 
-                        current_path += 1
+                # compute gradients and optimizer step
+                loss.backward()
+                nn.utils.clip_grad_norm_(model.parameters(), cfg.TRAIN.GRADIENT_CLIP)
+                optimizer.step()
 
-                    writer.add_scalar('Validation/valid_loss_value', val_loss.item(), iteration)
-
-                    # comet ml
-                    exp.log_metric('valid_loss_value', val_loss.item(), step=iteration)
-
-            writer.add_scalar('Validation/valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), i + 1)
+            writer.add_scalar('Training/train_global_loss', sum(train_losses[i]) / len(train_losses[i]), i + 1)
 
             # comet ml
-            exp.log_metric('valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), step=i + 1)  # loss  epoca
+            exp.log_metric('train_global_loss', sum(train_losses[i]) / len(train_losses[i]), step=i + 1)  # loss  epoca
 
-            print("End valid test")
-            print("Train Loss: {:.3f} - ".format(sum(train_losses[i]) / len(train_losses[i])),
-                  "Validation Loss: {:.3f}".format(sum(val_losses[i]) / len(val_losses[i])))
+            print("Epoch: {}/{}".format(i + 1, epochs),
+                  "Loss : {}".format(sum(train_losses[i]) / len(train_losses[i])))
 
-            torch.save(model.state_dict(),
-                       save_weights + '/weight_' + str(sum(val_losses[i]) / len(val_losses[i])) + '_' + str(
-                           i + 1) + '.pth')
+            #### Validation step
+            with exp.validate():
+                if (i + 1) % val_period == 0:
 
-        scheduler.step()
+                    print()
+                    print("Starting valid test")
+                    model.eval()
+
+                    type_name = 'val_'
+
+                    current_path = 0
+                    with torch.no_grad():
+
+                        for val_image, val_labels in val_loader:
+
+                            val_image = val_image.to(device)
+                            val_out = model(val_image.float(), device)
+
+                            val_loss = criterion(val_out, val_labels.float())
+
+                            if i in val_losses:
+                                val_losses[i].append(val_loss.item())
+                            else:
+                                val_losses[i] = [val_loss.item()]
+
+                            for k in range(len(val_out)):
+                                val_predicted = val_out[k].detach().numpy()
+                                val_real = val_labels[k].detach().numpy()
+
+                                val_path = val_p[current_path].replace("left_frames_processed", "left_frames")
+
+                                plot_data(val_real, val_predicted, exp, k, iteration, val_path, epoca, type_name)
+
+                                current_path += 1
+
+                            writer.add_scalar('Validation/valid_loss_value', val_loss.item(), iteration)
+
+                            # comet ml
+                            exp.log_metric('valid_loss_value', val_loss.item(), step=iteration)
+
+                    writer.add_scalar('Validation/valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), i + 1)
+
+                    # comet ml
+                    exp.log_metric('valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), step=i + 1)  # loss  epoca
+
+                    print("End valid test")
+                    print("Train Loss: {:.3f} - ".format(sum(train_losses[i]) / len(train_losses[i])),
+                          "Validation Loss: {:.3f}".format(sum(val_losses[i]) / len(val_losses[i])))
+
+                    torch.save(model.state_dict(),
+                               save_weights + '/weight_' + str(sum(val_losses[i]) / len(val_losses[i])) + '_' + str(
+                                   i + 1) + '.pth')
+
+                scheduler.step()
 
     writer.close()
     print()
