@@ -59,7 +59,7 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
         epoca = 'ep_' + str(i + 1) + '_'
         type_name = 'train_'
 
-        with exp.context_manager(epoca):
+        with exp.context_manager('epoca'):
             # Train
             with exp.context_manager('train'):
                 current_path = 0
