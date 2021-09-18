@@ -57,14 +57,14 @@ def plot_data(real, predicted, experiment, k, l, path, epoch, type_name):  # plo
     # plt.ylim([1, -80])
     # plt.xlim([-10, 70])
     plt.gca().invert_yaxis()  # origine asse z (y) in basso a sinistra
-    name = epoch + type_name + 'fig_' + str(k)
+    name = epoch  # + type_name + 'fig_' + str(k)
 
-    if k < 10:
-        name = epoch + type_name + 'fig_000' + str(k)
-    elif 10 <= k < 100:
-        name = epoch + type_name + 'fig_00' + str(k)
-    elif 100 <= k < 1000:
-        name = epoch + type_name + 'fig_0' + str(k)
+    # if k < 10:
+    #     name = epoch + type_name + 'fig_000' + str(k)
+    # elif 10 <= k < 100:
+    #     name = epoch + type_name + 'fig_00' + str(k)
+    # elif 100 <= k < 1000:
+    #     name = epoch + type_name + 'fig_0' + str(k)
 
     experiment.log_figure(figure_name=name, figure=plt, step=l)
     plt.figure().clear()
