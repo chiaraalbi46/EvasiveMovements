@@ -81,7 +81,7 @@ def plot_data(real, predicted, experiment, k, l, path, it):
     #     name = epoch + type_name + 'fig_0' + str(k)
 
     experiment.log_figure(figure_name=name, figure=plt, step=l)
-    plt.figure().clear()
+    # plt.figure().clear()
     fig.clear()
     # plt.show()
     plt.close(fig)
