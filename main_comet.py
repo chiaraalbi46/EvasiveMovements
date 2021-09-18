@@ -124,7 +124,9 @@ def main():
             train_data = TensorDataset(torch.from_numpy(train_images), torch.from_numpy(train_coordinates))
             val_data = TensorDataset(torch.from_numpy(valid_images), torch.from_numpy(valid_coordinates))
 
-            train_loader = DataLoader(train_data, shuffle=cfg.TRAIN.SHUFFLE_T, batch_size=cfg.TRAIN.BATCH_SIZE,
+            # train_loader = DataLoader(train_data, shuffle=cfg.TRAIN.SHUFFLE_T, batch_size=cfg.TRAIN.BATCH_SIZE,
+            #                           drop_last=True)
+            train_loader = DataLoader(train_data, shuffle=False, batch_size=cfg.TRAIN.BATCH_SIZE,
                                       drop_last=True)
             val_loader = DataLoader(val_data, shuffle=cfg.TRAIN.SHUFFLE_V, batch_size=cfg.TRAIN.BATCH_SIZE,
                                     drop_last=True)
