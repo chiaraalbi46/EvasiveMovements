@@ -77,13 +77,14 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 else:
                     train_losses[i] = [loss.item()]
 
-                for k in range(len(out)):
-                    predicted = out[k].detach().numpy()
-                    real = labels[k].detach().numpy()
-                    path = train_p[current_path].replace("left_frames_processed", "left_frames")
-                    # plot_data(real, predicted, exp, k, iteration, path, epoca, type_name)  # k, l, path
-                    plot_data(real, predicted, exp, k, (i+1), path, iteration)  # step = epoca
-                    current_path += 1
+                if (i+1) % 200 == 0:
+                    for k in range(len(out)):
+                        predicted = out[k].detach().numpy()
+                        real = labels[k].detach().numpy()
+                        path = train_p[current_path].replace("left_frames_processed", "left_frames")
+                        # plot_data(real, predicted, exp, k, iteration, path, epoca, type_name)  # k, l, path
+                        plot_data(real, predicted, exp, k, (i + 1), path, iteration)  # step = epoca
+                        current_path += 1
 
                 # tensorboard utilities
                 writer.add_scalar('Training/train_loss_value', loss.item(), iteration)
@@ -98,26 +99,27 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 nn.utils.clip_grad_norm_(model.parameters(), cfg.TRAIN.GRADIENT_CLIP)
                 optimizer.step()
 
-            writer.add_scalar('Training/train_global_loss', sum(train_losses[i]) / len(train_losses[i]), i + 1)
+        writer.add_scalar('Training/train_global_loss', sum(train_losses[i]) / len(train_losses[i]), i + 1)
 
-            # comet ml
-            exp.log_metric('train_global_loss', sum(train_losses[i]) / len(train_losses[i]), step=i + 1)  # loss  epoca
+        # comet ml
+        exp.log_metric('train_global_loss', sum(train_losses[i]) / len(train_losses[i]), step=i + 1)  # loss  epoca
 
-            print("Epoch: {}/{}".format(i + 1, epochs),
-                  "Loss : {}".format(sum(train_losses[i]) / len(train_losses[i])))
+        print("Epoch: {}/{}".format(i + 1, epochs),
+              "Loss : {}".format(sum(train_losses[i]) / len(train_losses[i])))
 
         #### Validation step
-        with exp.context_manager('validation'):
-            if (i + 1) % val_period == 0:
 
-                print()
-                print("Starting valid test")
-                model.eval()
+        if (i + 1) % val_period == 0:
 
-                type_name = 'val_'
+            print()
+            print("Starting valid test")
+            model.eval()
 
-                current_path = 0
-                with torch.no_grad():
+            type_name = 'val_'
+
+            current_path = 0
+            with torch.no_grad():
+                with exp.context_manager('validation'):
 
                     for val_image, val_labels in val_loader:
 
@@ -131,38 +133,40 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                         else:
                             val_losses[i] = [val_loss.item()]
 
-                        for k in range(len(val_out)):
-                            val_predicted = val_out[k].detach().numpy()
-                            val_real = val_labels[k].detach().numpy()
+                        if (i+1) % 200 == 0:
+                            for k in range(len(val_out)):
+                                val_predicted = val_out[k].detach().numpy()
+                                val_real = val_labels[k].detach().numpy()
 
-                            val_path = val_p[current_path].replace("left_frames_processed", "left_frames")
+                                val_path = val_p[current_path].replace("left_frames_processed", "left_frames")
 
-                            # plot_data(val_real, val_predicted, exp, k, iteration, val_path, epoca, type_name)
-                            plot_data(val_real, val_predicted, exp, k, (i+1), val_path, iteration)
+                                # plot_data(val_real, val_predicted, exp, k, iteration, val_path, epoca, type_name)
+                                plot_data(val_real, val_predicted, exp, k, (i + 1), val_path, iteration)
 
-                            current_path += 1
+                                current_path += 1
 
                         writer.add_scalar('Validation/valid_loss_value', val_loss.item(), iteration)
 
                         # comet ml
                         exp.log_metric('valid_loss_value', val_loss.item(), step=iteration)
 
-                writer.add_scalar('Validation/valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), i + 1)
+            writer.add_scalar('Validation/valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), i + 1)
 
-                # comet ml
-                exp.log_metric('valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), step=i + 1)  # loss  epoca
+            # comet ml
+            exp.log_metric('valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), step=i + 1)  # loss  epoca
 
-                print("End valid test")
-                print("Train Loss: {:.3f} - ".format(sum(train_losses[i]) / len(train_losses[i])),
-                      "Validation Loss: {:.3f}".format(sum(val_losses[i]) / len(val_losses[i])))
+            print("End valid test")
+            print("Train Loss: {:.3f} - ".format(sum(train_losses[i]) / len(train_losses[i])),
+                  "Validation Loss: {:.3f}".format(sum(val_losses[i]) / len(val_losses[i])))
 
-                torch.save(model.state_dict(),
-                           save_weights + '/weight_' + str(sum(val_losses[i]) / len(val_losses[i])) + '_' + str(
-                               i + 1) + '.pth')
-            exp.log_epoch_end(i+1)
-            scheduler.step()
+            torch.save(model.state_dict(),
+                       save_weights + '/weight_' + str(sum(val_losses[i]) / len(val_losses[i])) + '_' + str(
+                           i + 1) + '.pth')
+        # exp.log_epoch_end(i + 1)
+        scheduler.step()
 
     writer.close()
+    exp.end()
     print()
     print("Save losses graphs")
     onlyfile = [f for f in listdir(event_log_path) if isfile(join(event_log_path, f))]
