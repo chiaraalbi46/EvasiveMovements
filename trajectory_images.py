@@ -2,6 +2,7 @@ import argparse
 import pandas as pd
 from load_dataset import convert_to_vector
 import matplotlib.pyplot as plt
+import numpy as np
 from comet_ml import Experiment
 # import matplotlib as mpl
 #
@@ -48,7 +49,11 @@ def plot_data(real, predicted, experiment, k, l, path, it):
     # print("Real x: ", real[:, 0])
     # print("Real y: ", real[:, 1])
 
-    plt.plot(real[:, 0], real[:, 1], color="green", marker=".")
+    zero = np.zeros((1, 2))  # zero è sempre l'origine del tratto
+    r = np.concatenate((zero, real), axis=0)
+    # p = np.concatenate((zero, predicted), axis=0)
+
+    plt.plot(r[:, 0], r[:, 1], color="green", marker=".")
     plt.plot(predicted[:, 0], predicted[:, 1], color="magenta", marker="*")  # linestyle=""
 
     # Give labels
@@ -81,9 +86,7 @@ def plot_data(real, predicted, experiment, k, l, path, it):
     #     name = epoch + type_name + 'fig_0' + str(k)
 
     experiment.log_figure(figure_name=name, figure=plt, step=l)
-    # plt.figure().clear()
     fig.clear()
-    # plt.show()
     plt.close(fig)
     # plt.show()
 
