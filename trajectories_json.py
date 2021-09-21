@@ -12,17 +12,15 @@ def write_json(data, filename):
 
 def transform_RT(xdata, zdata, i, origin, angle_o, f, count):
     # Rotazione (angolo in radianti)
-    x_rot = (xdata[i + count] - origin[f][0]) * math.cos(angle_o[f]) - (
-            zdata[i + count] - origin[f][1]) * math.sin(angle_o[f])
-    y_rot = (xdata[i + count] - origin[f][0]) * math.sin(angle_o[f]) + (
-            zdata[i + count] - origin[f][1]) * math.cos(angle_o[f])
+    x_rot = round((xdata[i + count] - origin[f][0]) * math.cos(angle_o[f]) - (
+            zdata[i + count] - origin[f][1]) * math.sin(angle_o[f]), 3)
+    y_rot = round((xdata[i + count] - origin[f][0]) * math.sin(angle_o[f]) + (
+            zdata[i + count] - origin[f][1]) * math.cos(angle_o[f]), 3)
     # print('i', i, 'count', count)
-    # Traslazione
-    x_rot_t = x_rot + origin[f][0]
-    y_rot_t = y_rot + origin[f][1]
-    new_point = [x_rot_t, y_rot_t]
-    new_point[0] = round(x_rot_t, 3)
-    new_point[1] = round(y_rot_t, 3)
+    # Traslazione ? .. presente devesse essere [0, 0] ?
+    #x_rot_t = x_rot + origin[f][0]
+    #y_rot_t = y_rot + origin[f][1]
+    new_point = [x_rot, y_rot]
     return new_point
 
 
@@ -75,7 +73,9 @@ def create_traj_json(video_json_path, step, i_start, point_past, point_future, o
 
         if origine_i[f] == i and f < len(
                 origin) - 1:  # (i*step ) == origin_index[f] , and xdata[i] == origin[f][0] and zdata[i] == origin[f][1] and f < len(origin) - 1 :#and frame_index[i] % origin_distance == 0:
-            present.append(origin[f])
+            #present.append(origin[f])
+            new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, 0)
+            present.append(new_point)
 
             # Punti futuri
             count_future = 1
@@ -113,8 +113,8 @@ def create_traj_json(video_json_path, step, i_start, point_past, point_future, o
         pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
 
         write_json(array, pathToTrajFile)
-    # for i in range(len(array)):
-    #    print(array[i], '\n')
+    for i in range(len(array)):
+        print(array[i], '\n')
 
 
 # folder = 'D:\Dataset_Evasive_Movements\datasets\images_dataset\'
