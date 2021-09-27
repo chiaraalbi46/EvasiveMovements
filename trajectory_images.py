@@ -67,6 +67,13 @@ def plot_data(real, predicted, experiment, k, l, path, it):
     plt.title(vid_name)
     # plt.ylim([1, -80])
     # plt.xlim([-10, 70])
+
+    # Per avere scala 'quadrata'
+    y_end = np.min(np.min(predicted[:, 1]), np.min(real[:, 1]))  # max y (y è negativa)
+    x_end = y_end / 2
+    plt.xlim([x_end, - x_end])
+    plt.ylim([0, y_end])
+
     plt.gca().invert_yaxis()  # origine asse z (y) in basso a sinistra
     # name = epoch  # + type_name + 'fig_' + str(k)
     name = 'it_' + str(it) + '_fig_' + str(k)

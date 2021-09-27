@@ -75,12 +75,12 @@ class NET(nn.Module):
         features = out.reshape(out.size(0), -1)
         features = self.layer6(features)
 
-        """Dencoding phase"""
+        """Decoding phase"""
         output_seq = torch.empty((self.len_seq, self.batch_size, 2))
         h, c = self.init_hidden(features, device)
 
         for t in range(self.len_seq):
-            if t == 0:
+            if t == 0:  # TODO: controllare !!
                 out, (hidden, cell) = self.LSTM(features.unsqueeze(1), (h, c))
             else:
                 out, (hidden, cell) = self.LSTM(out, (hidden, cell))
