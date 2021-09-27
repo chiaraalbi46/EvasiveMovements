@@ -69,7 +69,7 @@ def plot_data(real, predicted, experiment, k, l, path, it):
     # plt.xlim([-10, 70])
 
     # Per avere scala 'quadrata'
-    y_end = np.min(np.min(predicted[:, 1]), np.min(real[:, 1]))  # max y (y è negativa)
+    y_end = np.min([np.min(predicted[:, 1]), np.min(real[:, 1])])  # max y (y è negativa)
     x_end = y_end / 2
     plt.xlim([x_end, - x_end])
     plt.ylim([0, y_end])
