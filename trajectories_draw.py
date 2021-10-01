@@ -26,7 +26,6 @@ def image_coordinates(path_json):
     zed = sl.Camera()
     camera_pose = sl.Pose()  # zed_pose
 
-    cam_params = zed.get_camera_information().calibration_parameters
 
     # Open the camera
     status = zed.open(init_params)
