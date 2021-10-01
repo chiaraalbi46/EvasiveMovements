@@ -21,13 +21,20 @@ def get_coordinates(path_json):
     return data, frame_index
 
 def image_coordinates(path_json):
-    video_json_path = ''
+    init_params = sl.InitParameters(camera_resolution=sl.RESOLUTION.HD720,  # Use HD720 video mode (default fps: 60)
+                                    coordinate_units=sl.UNIT.METER,
+                                    coordinate_system=sl.COORDINATE_SYSTEM.RIGHT_HANDED_Y_UP)
     # Create a ZED camera object
     zed = sl.Camera()
     camera_pose = sl.Pose()  # zed_pose
 
     cam_params = zed.get_camera_information().calibration_parameters
 
+    # Open the camera
+    status = zed.open(init_params)
+    if status != sl.ERROR_CODE.SUCCESS:
+        print(repr(status))
+        exit()
     # Focal length of the left eye in pixels
     focal_x = cam_params.left_cam.fx
     focal_y = cam_params.left_cam.fy
