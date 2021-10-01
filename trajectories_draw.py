@@ -33,6 +33,12 @@ def image_coordinates(path_json):
     if status != sl.ERROR_CODE.SUCCESS:
         print(repr(status))
         exit()
+
+    # Enable positional tracking with default parameters
+    tracking_params = sl.PositionalTrackingParameters()
+    zed.enable_positional_tracking(tracking_params)
+
+    cam_params = zed.get_camera_information().calibration_parameters
     # Focal length of the left eye in pixels
     focal_x = cam_params.left_cam.fx
     focal_y = cam_params.left_cam.fy
