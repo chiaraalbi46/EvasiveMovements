@@ -1,5 +1,3 @@
-import cv2, os, math, tqdm
-import pandas as pd
 import numpy as np
 import json
 #from utils.read_csv import load_data_for_video
