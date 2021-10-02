@@ -77,7 +77,8 @@ class NET(nn.Module):
 
         """Decoding phase"""
         output_seq = torch.empty((self.len_seq, self.batch_size, 2))
-        h, c = self.init_hidden(features, device)
+        # h, c = self.init_hidden(features, device)
+        h, c = self.init_hidden(device)  # prova
 
         for t in range(self.len_seq):
             if t == 0:  # TODO: controllare !!
