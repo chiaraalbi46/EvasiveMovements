@@ -1,8 +1,7 @@
-import sys
-import torch
+""" train with comet integration """
 
-# sys.path.insert(1, '/home/biondibazzanti/AutonomousDriving/Pytorch/models')
-# from utils.utilities import export_plot_from_tensorboard
+
+import torch
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.tensorboard import SummaryWriter
 import torch.nn as nn

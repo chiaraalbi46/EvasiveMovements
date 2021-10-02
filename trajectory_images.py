@@ -41,7 +41,7 @@ def plot_traj(csv_path):
 
 
 # def plot_data(real, predicted, experiment, k, l, path, epoch, type_name):  # plotta singole 'righe' csv (real, predicted)
-def plot_data(real, predicted, experiment, k, l, path, it):
+def plot_data(real, predicted, experiment, k, l, path, it):  # experiment prima di k, l
     fig = plt.figure()
 
     ax = plt.axes()
@@ -71,8 +71,8 @@ def plot_data(real, predicted, experiment, k, l, path, it):
     # Per avere scala 'quadrata'
     y_end = np.min([np.min(predicted[:, 1]), np.min(real[:, 1])])  # max y (y è negativa)
     x_end = y_end / 2
-    plt.xlim([x_end, - x_end])
-    plt.ylim([0, y_end])
+    plt.xlim([x_end - 1, - (x_end + 1)])
+    plt.ylim([0, y_end + 1])
 
     plt.gca().invert_yaxis()  # origine asse z (y) in basso a sinistra
     # name = epoch  # + type_name + 'fig_' + str(k)
