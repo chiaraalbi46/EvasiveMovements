@@ -77,8 +77,8 @@ class NET(nn.Module):
 
         """Decoding phase"""
         output_seq = torch.empty((self.len_seq, self.batch_size, 2))
-        # h, c = self.init_hidden(features, device)
-        h, c = self.init_hidden(device)  # prova
+        h, c = self.init_hidden(features, device)
+        # h, c = self.init_hidden(device)  # prova
 
         for t in range(self.len_seq):
             if t == 0:  # TODO: controllare !!
@@ -95,23 +95,23 @@ class NET(nn.Module):
 
         return output_seq
 
-    # def init_hidden(self, features, device):
-    #     """ Initialize hidden state """
-    #
-    #     h = torch.zeros((self.num_layers, self.batch_size, self.hidden_dimension)).to(device)  # features
-    #     c = torch.zeros((self.num_layers, self.batch_size, self.hidden_dimension)).to(device)
-    #
-    #     # init hidden and cell state with fc7 vector
-    #     for it in range(self.batch_size):
-    #         h[:, it, :] = c[:, it, :] = features[it, :]
-    #
-    #     return h, c
+    def init_hidden(self, features, device):
+        """ Initialize hidden state """
+
+        h = torch.zeros((self.num_layers, self.batch_size, self.hidden_dimension)).to(device)  # features
+        c = torch.zeros((self.num_layers, self.batch_size, self.hidden_dimension)).to(device)
+
+        # init hidden and cell state with fc7 vector
+        for it in range(self.batch_size):
+            h[:, it, :] = c[:, it, :] = features[it, :]
+
+        return h, c
 
     # PROVA
-    def init_hidden(self, device):
-        h = torch.zeros((self.num_layers, self.batch_size, self.hidden_dimension)).to(device)
-        c = torch.zeros((self.num_layers, self.batch_size, self.hidden_dimension)).to(device)
-        # weight = next(self.parameters()).data
-        # h = weight.new(self.num_layers, self.batch_size, self.hidden_dimension).zero_().to(device)
-        # c = weight.new(self.num_layers, self.batch_size, self.hidden_dimension).zero_().to(device)
-        return h, c
+    # def init_hidden(self, device):
+    #     h = torch.zeros((self.num_layers, self.batch_size, self.hidden_dimension)).to(device)
+    #     c = torch.zeros((self.num_layers, self.batch_size, self.hidden_dimension)).to(device)
+    #     # weight = next(self.parameters()).data
+    #     # h = weight.new(self.num_layers, self.batch_size, self.hidden_dimension).zero_().to(device)
+    #     # c = weight.new(self.num_layers, self.batch_size, self.hidden_dimension).zero_().to(device)
+    #     return h, c
