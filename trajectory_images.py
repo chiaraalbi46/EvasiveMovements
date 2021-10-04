@@ -30,7 +30,7 @@ def plot_traj(row_csv, csv_path):
         predicted.append(convert_to_vector(data_df['predicted'].values[k]))
         real.append(convert_to_vector(data_df['real'].values[k]))
     #print(predicted)
-    spl = np.array(data_df['image_path'])[446].split('/')
+    spl = np.array(data_df['image_path'])[row_csv].split('/')
     vid_name = spl[len(spl) - 4] + '/' + spl[len(spl) - 3] + '/' + spl[len(spl) - 2] + '/' + spl[len(spl) - 1]
 
     plt.title(vid_name)
