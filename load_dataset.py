@@ -33,6 +33,7 @@ def load_data_singleframe(csv_path, len_sequence):
     images_c = np.zeros([data_dimension, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS])
     tensor_list = np.zeros([data_dimension, len_sequence, 2])
 
+    # per understanding.py
     # path_frame[0] = 'C:/Users/chiar/Desktop/frame0090.png'
     # images_c[0] = load_image(image_file=path_frame[0])
     # print("DATAAAAA: ", data_df["future_point"][0])

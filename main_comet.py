@@ -7,6 +7,7 @@ from torch.utils.data import TensorDataset, DataLoader
 from configs.config import cfg
 from initialize_model import initialize_model
 from load_dataset import load_data_singleframe
+# from test_comet import test
 from test import test
 from train_comet import train
 
@@ -173,7 +174,7 @@ def main():
                                      drop_last=True)
 
             test(model=model, criterion=criterion, model_path=args.model, test_loader=test_loader,
-                 paths=image_path, dev=args.device, model_type=args.model_type)
+                 paths=image_path, dev=args.device, model_type=args.model_type)  # exp=experiment
             # test(test_loader=test_loader,
             #      paths=image_path, dev=args.device, model_type=args.model_type)
 
