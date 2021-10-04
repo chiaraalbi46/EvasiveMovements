@@ -3,14 +3,24 @@ import pandas as pd
 from load_dataset import convert_to_vector
 import matplotlib.pyplot as plt
 import numpy as np
+from create_csv_file import right_slash
 from comet_ml import Experiment
 # import matplotlib as mpl
 #
 # mpl.use('Agg')
+#C:\Users\ninad\Desktop\video_guida\csv\summarize_test.csv
+#C:\Users\ninad\Desktop\datasets\images_dataset\normal\video88\left_frames_processed
+#/home/aivdepth/datasets/images_dataset/normal/video88/left_frames/frame0290.png
+#row_csv = 447 -1 #(?)
 
 
-def plot_traj(csv_path):
+#>python trajectory_images.py --row_csv 447 --csv_path C:\Users\ninad\Desktop\video_guida\csv\summarize_test.csv
+
+def plot_traj(row_csv, csv_path):
+    csv_path = right_slash(csv_path)
     # csv_path = 'summarize_test.csv'
+#    csv_path = 'C:/Users/ninad/Desktop/video_guida/csv/summarize_test.csv'
+    row_csv = int(row_csv) - 1  # parte da 0
     data_df = pd.read_csv(csv_path, error_bad_lines=False, names=["image_path", "predicted", "real"])
     # print(data_df)
 
@@ -19,23 +29,23 @@ def plot_traj(csv_path):
     for k in range(len(data_df['predicted'].values)):
         predicted.append(convert_to_vector(data_df['predicted'].values[k]))
         real.append(convert_to_vector(data_df['real'].values[k]))
+    #print(predicted)
+    spl = np.array(data_df['image_path'])[446].split('/')
+    vid_name = spl[len(spl) - 4] + '/' + spl[len(spl) - 3] + '/' + spl[len(spl) - 2] + '/' + spl[len(spl) - 1]
 
-    # print('REAL', ((real[0])) , '\n')
-    # print('pred', ((predicted[0]))  , '\n')
-
-    # #fig = plt.figure(figsize=(15, 15))
+    plt.title(vid_name)
+    # # #fig = plt.figure(figsize=(15, 15))
     ax = plt.axes()
-    for i in range(len(real)):
-        for j in range(len(real[i])):
-            # print(real[i][j][0], real[i][j][1])
-            plt.plot(real[i][j][0], real[i][j][1], color="green", marker=".", linestyle="")
-            plt.plot(predicted[i][j][0], predicted[i][j][1], color="magenta", marker="*", linestyle="")  # linestyle=""
+
+    # print(real[i][j][0], real[i][j][1])
+    plt.plot(real[row_csv][:, 0], real[row_csv][:, 1], color="green", marker=".") #, linestyle="")
+    plt.plot(predicted[row_csv][:, 0], predicted[row_csv][:, 1], color="magenta", marker=".")#, linestyle="")  # linestyle=""
 
     # Give labels
     ax.set_xlabel('x')
     ax.set_ylabel('z')
-    # plt.ylim([1, -80])
-    # plt.xlim([-10, 70])
+    plt.ylim([0, -8])
+    plt.xlim([-4, 4])
     # plt.gca().invert_yaxis() # origine asse z (y) in basso a sinistra
     plt.show()
 
@@ -96,15 +106,16 @@ def plot_data(real, predicted, experiment, k, l, path, it):
     fig.clear()
     plt.close(fig)
     # plt.show()
-
-
+#
+#
 def main():
     parser = argparse.ArgumentParser(description="Plots the real and predicted trajectories using the csv file")
-
+    parser.add_argument("--row_csv", dest="row_csv", default=0, help="Select the line of the CSV file")
     parser.add_argument("--csv_path", dest="path", default=None, help="Path of the csv file")
-    args = parser.parse_args()
-    plot_traj(csv_path=args.path)
 
+    args = parser.parse_args()
+
+    plot_traj(row_csv=args.row_csv, csv_path=args.path)
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
