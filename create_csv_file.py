@@ -6,11 +6,11 @@ from configs.config import cfg
 import csv
 
 CSV_DATASET_PATH = cfg.CSV_DATASET_PATH  # os.path.join(DATASETS_PATH, 'csv_dataset')
-
+#CSV_DATASET_PATH  = 'C:/Users/ninad/Desktop/frame_dataset/datasets/csv_dataset/'
 # traj on csv
 
 
-def video_traj(data, path, flip):
+def video_traj(filewriter, data, path, flip):
     for i in range(len(data)):
 
         past = data[i]['Past']
@@ -28,10 +28,11 @@ def video_traj(data, path, flip):
             name = 'frame0' + str(ind_frame)
 
         img_path = right_slash(os.path.join(path, "left_frames" + flip + "processed/", name + '.png'))
-
+        #print('path: ', img_path)
         past.append(data[i]['Present'])  # past = past + present
         lines = [path, img_path, past, future]  # rivedere se serve path
-        return lines
+        filewriter.writerow(lines)
+    #return filewriter
 
 # def create_csv(config_path, data_type, len_seq):
 def create_csv(config_path, config_f, data_type, len_seq, flip):
@@ -52,7 +53,7 @@ def create_csv(config_path, config_f, data_type, len_seq, flip):
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
 
-    save_path = right_slash(os.path.join(save_dir, data_type + '_' + conf + '_' + str(
+    save_path = right_slash(os.path.join(save_dir, data_type + '_' + config_f + '_' + str(
         len_seq) + '_sequence.csv'))
     print("save_path: ", save_path)
 
@@ -69,12 +70,12 @@ def create_csv(config_path, config_f, data_type, len_seq, flip):
             # print("json folder: ", json_folder)
 
             data = json.load(open(json_folder + vid_name + '_traj.json'))  # apro il file con le traiettorie
-            lines = video_traj(data, path, '_')
-            filewriter.writerow(lines)
+            video_traj(filewriter, data, path, '_')
+            #filewriter.writerow(lines)
             if flip == 1:
                 data_flip = json.load(open(json_folder + vid_name + '_traj_flip.json'))  # apro il file con le traiettorie
-                lines_flip = video_traj(data_flip, path, '_flip_')
-                filewriter.writerow(lines_flip)
+                video_traj(filewriter, data_flip, path, '_flip_')
+                #filewriter.writerow(lines_flip)
 
 
             # for i in range(len(data)):
