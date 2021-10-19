@@ -66,7 +66,7 @@ def dir_process(folder):
                 flip_image(path_frame)
                 #print(path_frame)
 
- # todo devo creare il file json per tutte le immagini flippate
+
 
 def main():
     parser = argparse.ArgumentParser(description="Image augmentation: flipping the image vertically")
@@ -77,7 +77,7 @@ def main():
 
 
 if __name__ == "__main__":
-   # create_json()
-    main()
-    # folder = 'C:/Users/ninad/Desktop/frame_dataset/datasets/images_dataset/'
-    # dir_process(folder)
+#    # create_json()
+     main()
+#     folder = 'C:/Users/ninad/Desktop/frame_dataset/datasets/images_dataset/'
+#     dir_process(folder)
