@@ -42,8 +42,8 @@ def image_coordinates(path_json):
     focal_x = cam_params.left_cam.fx
     focal_y = cam_params.left_cam.fy
 
-    optical_x = cam_params.left_cam.fx
-    optical_y = cam_params.left_cam.fy
+    optical_x = cam_params.left_cam.cx
+    optical_y = cam_params.left_cam.cy
 
     K = np.array([[focal_x,       0,  optical_x],
                   [      0, focal_y,  optical_y],
