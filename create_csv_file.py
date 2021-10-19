@@ -1,13 +1,11 @@
 import json
-import platform
 import os
 import argparse
 from configs.config import cfg
+from net_utilities import right_slash
 import csv
 
-CSV_DATASET_PATH = cfg.CSV_DATASET_PATH  # os.path.join(DATASETS_PATH, 'csv_dataset')
-#CSV_DATASET_PATH  = 'C:/Users/ninad/Desktop/frame_dataset/datasets/csv_dataset/'
-# traj on csv
+# CSV_DATASET_PATH = cfg.CSV_DATASET_PATH  # os.path.join(DATASETS_PATH, 'csv_dataset')
 
 
 def video_traj(filewriter, data, path, flip):
@@ -28,14 +26,15 @@ def video_traj(filewriter, data, path, flip):
             name = 'frame0' + str(ind_frame)
 
         img_path = right_slash(os.path.join(path, "left_frames" + flip + "processed/", name + '.png'))
-        #print('path: ', img_path)
+        # print('path: ', img_path)
         past.append(data[i]['Present'])  # past = past + present
         lines = [path, img_path, past, future]  # rivedere se serve path
         filewriter.writerow(lines)
-    #return filewriter
+    # return filewriter
+
 
 # def create_csv(config_path, data_type, len_seq):
-def create_csv(config_path, config_f, data_type, len_seq, flip):
+def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip):
     config_path = config_path + config_f
     # file_path = config_path + data_type + '.json'
     file_path = right_slash(os.path.join(config_path, data_type + '.json'))
@@ -44,12 +43,9 @@ def create_csv(config_path, config_f, data_type, len_seq, flip):
     with open(file_path, 'r') as jsonfile:
         d = json.load(jsonfile)
 
-    spl = config_path.split('/')
-    conf = spl[len(spl) - 1]
-    print("CONFIG: ", conf)
-
-    save_dir = os.path.join(CSV_DATASET_PATH, data_type)
+    save_dir = right_slash(os.path.join(csv_path, data_type))
     print("save_dir: ", save_dir)
+
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
 
@@ -66,63 +62,23 @@ def create_csv(config_path, config_f, data_type, len_seq, flip):
             spl = path.split('/')
             vid_name = spl[len(spl) - 1]
 
-            json_folder = path + '/'  # TODO: fix '/json/'
+            json_folder = path + '/'
             # print("json folder: ", json_folder)
 
             data = json.load(open(json_folder + vid_name + '_traj.json'))  # apro il file con le traiettorie
             video_traj(filewriter, data, path, '_')
-            #filewriter.writerow(lines)
+
             if flip == 1:
-                data_flip = json.load(open(json_folder + vid_name + '_traj_flip.json'))  # apro il file con le traiettorie
+                data_flip = json.load(
+                    open(json_folder + vid_name + '_traj_flip.json'))  # apro il file con le traiettorie
                 video_traj(filewriter, data_flip, path, '_flip_')
-                #filewriter.writerow(lines_flip)
-
-
-            # for i in range(len(data)):
-            #
-            #     past = data[i]['Past']
-            #     future = data[i]['Future']
-            #
-            #     ind_frame = data[i]['Frame']
-            #     print("\t FRAME: ", ind_frame)
-            #
-            #     name = 'frame' + str(ind_frame)
-            #     if ind_frame < 10:
-            #         name = 'frame000' + str(ind_frame)
-            #     elif 10 <= ind_frame < 100:
-            #         name = 'frame00' + str(ind_frame)
-            #     elif 100 <= ind_frame < 1000:
-            #         name = 'frame0' + str(ind_frame)
-            #
-            #     img_path = right_slash(os.path.join(path, "left_frames_processed/", name + '.png'))
-            #     # if platform.system() is 'Windows' and '\\' in img_path:
-            #     #     img_path = img_path.replace('\\', '/')
-            #     #     print("path traformato: ", img_path)
-            #     # print("img_path: ", img_path)
-            #
-            #     past.append(data[i]['Present'])  # past = past + present
-            #     lines = [path, img_path, past, future]  # rivedere se serve path
-            #     filewriter.writerow(lines)
-
-
-
-# per path di windows creati con join che hanno slash \
-
-def right_slash(path):
-    if platform.system() is 'Windows' and '\\' in path:
-        path = path.replace('\\', '/')
-        print("Changing '\\' slashes")
-        # print("path traformato: ", path)
-
-    return path
 
 
 def main():
-    # vedere se tenere path e passare solo config_0 o numero
-    # config_path = 'C:/Users/chiar/PycharmProjects/EvasiveMovements/datasets/json_dataset/config2'
-    # create_csv(config_path, 'train', 10)
 
     parser = argparse.ArgumentParser(description="Create the CSV file from video sequences.")
+    parser.add_argument("--csv_path", dest="csv", default=cfg.CSV_DATASET_PATH,
+                        help="Path to the json folder where 'splitting' files are contained")
     parser.add_argument("--config_path", dest="input", default=cfg.JSON_DATASET_PATH,
                         help="Path to the json folder where 'splitting' files are contained")
     parser.add_argument("--config_f", dest="folder", default='', help="Name of the config folder desired")
@@ -134,9 +90,8 @@ def main():
 
     args = parser.parse_args()
 
-    # create_csv(config_path=args.input, data_type=args.data_type, len_seq=int(args.len_seq))
-    create_csv(config_path=args.input, config_f=args.folder, data_type=args.data_type, len_seq=int(args.len_seq),
-               flip=int(args.flip))
+    create_csv(csv_path=args.csv, config_path=args.input, config_f=args.folder, data_type=args.data_type,
+               len_seq=int(args.len_seq), flip=int(args.flip))
 
 
 if __name__ == '__main__':

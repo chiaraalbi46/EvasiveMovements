@@ -1,17 +1,12 @@
 # Prove split dataset
 import os
 import numpy as np
-# from create_video_json import write_json
 import argparse
 import json
 from configs.config import cfg
-from create_csv_file import right_slash
+import platform
 
 # NB: lo split va fatto sui video (nel senso di nomi delle cartelle)
-
-# TODO: rinominare video con 0*
-# TODO: mettere qui controllo per avere video0* se ho video3 ad esempio oppure rinominare anche video con una sola cifra
-# TODO: folder process
 
 # non sta qui !
 
@@ -19,6 +14,16 @@ from create_csv_file import right_slash
 def write_json(data, filename):
     with open(filename, 'w') as f:
         json.dump(data, f, indent=4)
+
+
+# per path di windows creati con join che hanno slash \
+def right_slash(path):
+    if platform.system() is 'Windows' and '\\' in path:
+        path = path.replace('\\', '/')
+        print("Changing '\\' slashes")
+        # print("path traformato: ", path)
+
+    return path
 
 
 # def dataset_split(folder, train_perc, test_perc, config_folder):
@@ -50,10 +55,6 @@ def dataset_split(folder, train_perc, test_perc):  # base_dest, config_folder
     val_a = []
     for i in range(size):
         el = dataset[i]
-        # poi non ci sarà
-        # spl = el.split('.')
-        # vid_name = spl[0]
-        # path = folder + vid_name
         path = folder + '/' + el
         print("\tI: ", i)
         print("\tPATH: ", path)

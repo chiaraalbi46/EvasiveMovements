@@ -9,7 +9,7 @@ import os
 import argparse
 import platform
 from configs.config import cfg
-from create_csv_file import right_slash
+from net_utilities import right_slash
 
 
 def write_json(data, filename):
