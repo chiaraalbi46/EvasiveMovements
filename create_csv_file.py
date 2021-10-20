@@ -69,7 +69,7 @@ def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp
 
             if flip == 1:
                 data_flip = json.load(
-                    open(json_folder + vid_name + '_traj_flip.json'))  # apro il file con le traiettorie
+                    open(json_folder + vid_name + '_' + od + '_' + fp + '_traj_flip.json'))  # apro il file con le traiettorie
                 video_traj(filewriter, data_flip, path, '_flip_')
 
 
