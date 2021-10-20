@@ -35,7 +35,7 @@ def video_traj(filewriter, data, path, flip):
     #return filewriter
 
 # def create_csv(config_path, data_type, len_seq):
-def create_csv(config_path, config_f, data_type, len_seq, flip):
+def create_csv(config_path, config_f, data_type, len_seq, flip, vid_name):
     config_path = config_path + config_f
     # file_path = config_path + data_type + '.json'
     file_path = right_slash(os.path.join(config_path, data_type + '.json'))
@@ -63,8 +63,8 @@ def create_csv(config_path, config_f, data_type, len_seq, flip):
             path = d[j]['Path']  # path alla cartella video j-esimo
             print("PATH: ", path)
 
-            spl = path.split('/')
-            vid_name = spl[len(spl) - 1]
+            #spl = path.split('/')
+            #vid_name = spl[len(spl) - 1]
 
             json_folder = path + '/'  # TODO: fix '/json/'
             # print("json folder: ", json_folder)
@@ -129,14 +129,15 @@ def main():
     parser.add_argument("--type", dest="data_type", default=None, help="Choose the dataset: train, validation, test")
     parser.add_argument("--len_seq", dest="len_seq", default=None,
                         help="Define the number of predicted coords to consider")
-    parser.add_argument("--flip", dest="flip", default=0,
-                        help="0 no flip, 1 flip")
+    parser.add_argument("--flip", dest="flip", default=0, help="0 no flip, 1 flip")
+    parser.add_argument("--vid_name", dest="vid_name", default=None,
+                        help="Name of json file with origin_distance and future points")
 
     args = parser.parse_args()
 
     # create_csv(config_path=args.input, data_type=args.data_type, len_seq=int(args.len_seq))
     create_csv(config_path=args.input, config_f=args.folder, data_type=args.data_type, len_seq=int(args.len_seq),
-               flip=int(args.flip))
+               flip=int(args.flip), vid_name=args.vid_name)
 
 
 if __name__ == '__main__':

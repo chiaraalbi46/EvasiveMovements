@@ -74,21 +74,23 @@ def create_traj_json(video_json_path, step, i_start, point_past, point_future, o
         if origine_i[f] == i and f < len(
                 origin) - 1:  # (i*step ) == origin_index[f] , and xdata[i] == origin[f][0] and zdata[i] == origin[f][1] and f < len(origin) - 1 :#and frame_index[i] % origin_distance == 0:
             #present.append(origin[f])
-            new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, 0)
+            new_point = [xdata[i], zdata[i]]
+            #new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, 0)
             present.append(new_point)
 
             # Punti futuri
             count_future = 1
             while count_future < point_future and i + count_future < len(xdata):
-                new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, count_future)
+                new_point = [xdata[i+count_future], zdata[i+count_future]]
+                #new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, count_future)
                 future.append(new_point)
                 count_future += 1
 
             # Punti passati
             count = point_past
             while i - count >= 0 and count > 0:  # and i - count != 0:
-
-                new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, (-count))
+                new_point = [xdata[i-count], zdata[i-count]]
+                #new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, (-count))
                 past.append(new_point)
                 count -= 1
 
@@ -105,14 +107,14 @@ def create_traj_json(video_json_path, step, i_start, point_past, point_future, o
             past = []
             f += 1
 
-        spl = video_json_path.split(os.sep)  # '/'
-        vid_name = spl[len(spl) - 1]
-        spl1 = vid_name.split('.')
-        vname = spl1[0]
-        final_name = vname + '_traj.json'
-        pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
+    spl = video_json_path.split(os.sep)  # '/'
+    vid_name = spl[len(spl) - 1]
+    spl1 = vid_name.split('.')
+    vname = spl1[0]
+    final_name = vname + '_' + str(origin_distance) + '_' + str(point_future)  + '_traj.json'
+    pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
 
-        write_json(array, pathToTrajFile)
+    write_json(array, pathToTrajFile)
     for i in range(len(array)):
         print(array[i], '\n')
 
