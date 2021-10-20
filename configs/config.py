@@ -2,7 +2,6 @@
 This file specifies default config options for the model used.
 """
 
-# DEFINE THE DIFFERENT PATH WHERE THE TREE MODEL WILL SAVE THE RESULT
 
 from configs.collections import AttrDict
 
@@ -13,17 +12,13 @@ __C = AttrDict()
 cfg = __C
 
 # ####################################################################################################################################
-__C.SAVE_WEIGHT_PATH = {'single': "/home/aivdepth/saved_models/single_frame/"}
-__C.SAVE_RESULTS_PATH = {'single': "/home/aivdepth/test_results/single_frame/"}
-# __C.SAVE_VIDEO_PATH = {"/home/aivdepth/Video_dataset/"} #todo immagine con traiettorie finale e originale
-__C.TENSORBOARD_PATH = {'single': "/home/aivdepth/tensorboard_runs/single_frame/"}
-__C.DATASET_PATH = "/home/aivdepth/datasets/images_dataset/"
-# __C.DATASET_PATH = {'processed': "/home/aivdepth/datasets/images_dataset_processed/",  # ne metterei uno e basta
-#                     'original': "/home/aivdepth/datasets/images_dataset/"}
-# __C.SVO_DATASET_PATH = "/home/aivdepth/datasets/video_dataset/svo/"
-__C.SVO_DATASET_PATH = "/andromeda/datasets/rc_car_maneuvers/svo_cut/"  # new
-__C.CSV_DATASET_PATH = "/home/aivdepth/datasets/csv_dataset/"
-__C.JSON_DATASET_PATH = "/home/aivdepth/datasets/json_dataset/"
+__C.SAVE_WEIGHT_PATH = {'single': "/andromeda/datasets/rc_car_maneuvers/aivdepth/saved_models/single_frame/"}
+__C.SAVE_RESULTS_PATH = {'single': "/andromeda/datasets/rc_car_maneuvers/aivdepth/test_results/single_frame/"}
+__C.TENSORBOARD_PATH = {'single': "/andromeda/datasets/rc_car_maneuvers/aivdepth/tensorboard_runs/single_frame/"}
+__C.DATASET_PATH = "/andromeda/datasets/rc_car_maneuvers/aivdepth/datasets/images_dataset/"
+__C.SVO_DATASET_PATH = "/andromeda/datasets/rc_car_maneuvers/svo_cut/"
+__C.CSV_DATASET_PATH = "/andromeda/datasets/rc_car_maneuvers/aivdepth/datasets/csv_dataset/"
+__C.JSON_DATASET_PATH = "/andromeda/datasets/rc_car_maneuvers/aivdepth/datasets/json_dataset/"
 # ####################################################################################################################################
 #
 # TRAINING PARAMETERS

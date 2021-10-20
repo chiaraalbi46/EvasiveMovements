@@ -3,7 +3,7 @@ import pandas as pd
 from load_dataset import convert_to_vector
 import matplotlib.pyplot as plt
 import numpy as np
-from create_csv_file import right_slash
+from net_utilities import right_slash
 from comet_ml import Experiment
 # import matplotlib as mpl
 #

@@ -2,12 +2,8 @@ import argparse
 import json
 import os
 import math
-from create_csv_file import right_slash
-
-
-def write_json(data, filename):
-    with open(filename, 'w') as f:
-        json.dump(data, f, indent=4)
+from net_utilities import right_slash
+from net_utilities import write_json
 
 
 def transform_RT(xdata, zdata, i, origin, angle_o, f, count):

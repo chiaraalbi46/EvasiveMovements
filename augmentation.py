@@ -4,10 +4,8 @@ import os
 import cv2
 import argparse
 import json
+from net_utilities import write_json
 
-def write_json(data, filename):
-    with open(filename, 'w') as f:
-        json.dump(data, f, indent=4)
 
 def flip_image(path_frame):
     img = cv2.imread(path_frame.strip(), -1)
@@ -24,6 +22,7 @@ def flip_image(path_frame):
 
 # path = '/home/aivdepth/datasets/images_dataset'
 # /home/aivdepth/datasets/images_dataset/sx_walk_sx/video270/left_frames
+
 
 #/home/aivdepth/datasets/images_dataset/sx_walk_sx/video270/video270_traj.json
 def create_json(path_json):
@@ -66,7 +65,6 @@ def dir_process(folder, vid_name):
                 path_frame = path_dir_frame + l
                 flip_image(path_frame)
                 #print(path_frame)
-
 
 
 def main():

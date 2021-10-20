@@ -11,6 +11,7 @@ from matplotlib import pyplot as plt
 from create_csv_file import right_slash
 from load_dataset import convert_to_vector
 
+
 # fx : Focal length in pixels along x axis.
 # cx : Optical center along x axis, defined in pixels (usually close to width/2).
 
@@ -29,6 +30,7 @@ def get_coordinates(start_path, csv_path):
         path.append(new_path)
 
     return predicted, real, path
+
 
 def get_data_proj(data):
     # # Focal length of the left eye in pixels
@@ -49,16 +51,17 @@ def get_data_proj(data):
     for i in range(len(data)):  # cambia per ogni video
         tmp = []
         for j in data[i]:
-            #print(j)
+            # print(j)
             new_point_pj = np.dot(P, [-j[0], -1, j[1], 1])
             tmp.append(new_point_pj / (new_point_pj[2]))
         data_proj.append(tmp)
     return data_proj
 
-def get_data_proj_2(data):
-   # arr_y = []
 
-   # arr_y.append(- np.ones((1, len(i['Future'])))[0])
+def get_data_proj_2(data):
+    # arr_y = []
+
+    # arr_y.append(- np.ones((1, len(i['Future'])))[0])
 
     f = 675
     cx = 654  # 334.25
@@ -76,9 +79,8 @@ def get_data_proj_2(data):
         tmp = []
         for i in range(len(data[j])):
             canvas_x = ((data[j][i][0] * f) / - data[j][i][1])
-            #canvas_y = ((data[j][i][1] * f) / - data[j][i])
+            # canvas_y = ((data[j][i][1] * f) / - data[j][i])
             canvas_y = ((-1 * f) / - data[j][i][1])
-
 
             # NDC system
             ndc_x = (canvas_x + cx) / width
@@ -88,19 +90,19 @@ def get_data_proj_2(data):
             raster_x = math.floor(ndc_x * p_width)
             raster_y = math.floor((1 - ndc_y) * p_height)
 
-
             tmp.append([raster_x, raster_y])
 
         data_proj.append(tmp)
     return data_proj
-def image_coordinates(start_path, csv_path):  # video_path, path_calib_j, path_json):
-    #video_path = 'C:/Users/ninad/Desktop/video_guida/194/video194.avi'
 
-    #start_path = 'C:/Users/ninad/Desktop/frame_dataset/'
-    #csv_path = 'C:/Users/ninad/Desktop/video_guida/summarize_test.csv '
+
+def image_coordinates(start_path, csv_path):  # video_path, path_calib_j, path_json):
+    # video_path = 'C:/Users/ninad/Desktop/video_guida/194/video194.avi'
+
+    # start_path = 'C:/Users/ninad/Desktop/frame_dataset/'
+    # csv_path = 'C:/Users/ninad/Desktop/video_guida/summarize_test.csv '
 
     predicted, real, path = get_coordinates(start_path, csv_path)
-
 
     pred_proj = get_data_proj_2(predicted)
     real_proj = get_data_proj_2(real)
@@ -115,48 +117,53 @@ def image_coordinates(start_path, csv_path):  # video_path, path_calib_j, path_j
     size = (0, 0)
 
     for j in range(len(real_proj)):
-            path_frame = path[j]
-            if os.path.exists(path_frame):
+        path_frame = path[j]
+        if os.path.exists(path_frame):
 
-                img = cv2.imread(path_frame.strip(), -1)
-                img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-                height, width, _ = img.shape
-                size = (width, height)
+            img = cv2.imread(path_frame.strip(), -1)
+            img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+            height, width, _ = img.shape
+            size = (width, height)
 
-                for i in range(len(real_proj[j])):
-                    x_real = int(real_proj[j][i][0])
-                    y_real = int(real_proj[j][i][1])
+            for i in range(len(real_proj[j])):
+                x_real = int(real_proj[j][i][0])
+                y_real = int(real_proj[j][i][1])
 
-                    x_pred = int(pred_proj[j][i][0])
-                    y_pred = int(pred_proj[j][i][1])
+                x_pred = int(pred_proj[j][i][0])
+                y_pred = int(pred_proj[j][i][1])
 
-                    #print('x', x, 'y', y)
-                    cv2.circle(img, (x_real, y_real), 3, (0, 0, 255), 4)
-                    cv2.circle(img, (x_pred, y_pred), 3, (0, 255, 0), 4)
+                # print('x', x, 'y', y)
+                cv2.circle(img, (x_real, y_real), 3, (0, 0, 255), 4)
+                cv2.circle(img, (x_pred, y_pred), 3, (0, 255, 0), 4)
 
-                    if (i< (len(real_proj[j]) - 1)):
-                        next_x_real = math.ceil(real_proj[j][i + 1][0])
-                        next_y_real = math.ceil(real_proj[j][i + 1][1])
-                        cv2.line(img, (x_real, y_real), (next_x_real, next_y_real), (0, 0, 222), 2)
+                if (i < (len(real_proj[j]) - 1)):
+                    next_x_real = math.ceil(real_proj[j][i + 1][0])
+                    next_y_real = math.ceil(real_proj[j][i + 1][1])
+                    cv2.line(img, (x_real, y_real), (next_x_real, next_y_real), (0, 0, 222), 2)
 
-                        next_x_pred = math.ceil(pred_proj[j][i + 1][0])
-                        next_y_pred = math.ceil(pred_proj[j][i + 1][1])
-                        cv2.line(img, (x_pred, y_pred), (next_x_pred, next_y_pred), (0, 222, 0), 2)
+                    next_x_pred = math.ceil(pred_proj[j][i + 1][0])
+                    next_y_pred = math.ceil(pred_proj[j][i + 1][1])
+                    cv2.line(img, (x_pred, y_pred), (next_x_pred, next_y_pred), (0, 222, 0), 2)
 
-                ap = path_frame.split('/')
-                name_frame = ap[len(ap)-1]
-                path_result = '/'.join(ap[:len(ap) - 4]) + '/result/' + ap[len(ap) - 3] + '/'
-                if not os.path.exists( path_result):
-                    os.mkdir( path_result)
-                #print(path_result)
-                name = path_result + name_frame + '.png'
-
-                font = cv2.FONT_HERSHEY_SIMPLEX
-                cv2.putText(img, 'Ground Truth', (100, 100), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
-                cv2.putText(img, 'Predicted', (100, 150), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+            ap = path_frame.split('/')
+            name_frame = ap[len(ap) - 1]
+            path_result = '/'.join(ap[:len(ap) - 4]) + '/result/' + ap[len(ap) - 3] + '/'
+            if not os.path.exists(path_result):
+                os.mkdir(path_result)
+            # print(path_result)
+            name = path_result + name_frame + '.png'
 
                 #cv2.imwrite(name, img)
                # video_img.append(img)
+
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(img, 'Ground Truth', (100, 100), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
+            cv2.putText(img, 'Predicted', (100, 150), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+
+            cv2.imwrite(name, img)
+
+
+#                 video_img.append(img)
 #
 # #
 #
@@ -180,6 +187,7 @@ def image_coordinates(start_path, csv_path):  # video_path, path_calib_j, path_j
 #
 #     args = parser.parse_args()
 #     image_coordinates(start_path=args.start_p, csv_path=args.csv_p)
+
 
 if __name__ == "__main__":
     #main()
