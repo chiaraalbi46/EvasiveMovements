@@ -76,7 +76,7 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 else:
                     train_losses[i] = [loss.item()]
 
-                num_plots = (epochs / plot_step)
+                num_plots = int(epochs / plot_step)
                 if (i+1) % num_plots == 0:
                     for k in range(len(out)):
                         predicted = out[k].detach().numpy()
