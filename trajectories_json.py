@@ -107,7 +107,7 @@ def create_traj_json(video_json_path, step, i_start, point_past, point_future, o
     vid_name = spl[len(spl) - 1]
     spl1 = vid_name.split('.')
     vname = spl1[0]
-    final_name = vname + '_' + str(origin_distance) + '_' + str(point_future)  + '_traj.json'
+    final_name = vname + '_' + str(origin_distance) + '_' + str(point_future - 1) + '_traj.json'
     pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
 
     write_json(array, pathToTrajFile)

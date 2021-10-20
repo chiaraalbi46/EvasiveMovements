@@ -33,7 +33,7 @@ def video_traj(filewriter, data, path, flip):
     # return filewriter
 
 
-def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, vid_name):
+def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp):  # origin_distance, future_points
     config_path = config_path + config_f
     # file_path = config_path + data_type + '.json'
     file_path = right_slash(os.path.join(config_path, data_type + '.json'))
@@ -58,13 +58,13 @@ def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, vid_na
             path = d[j]['Path']  # path alla cartella video j-esimo
             print("PATH: ", path)
 
-            #spl = path.split('/')
-            #vid_name = spl[len(spl) - 1]
+            spl = path.split('/')
+            vid_name = spl[len(spl) - 1]
 
             json_folder = path + '/'
             # print("json folder: ", json_folder)
 
-            data = json.load(open(json_folder + vid_name + '_traj.json'))  # apro il file con le traiettorie
+            data = json.load(open(json_folder + vid_name + '_' + od + '_' + fp + '_traj.json'))  # apro il file con le traiettorie
             video_traj(filewriter, data, path, '_')
 
             if flip == 1:
@@ -85,13 +85,15 @@ def main():
     parser.add_argument("--len_seq", dest="len_seq", default=None,
                         help="Define the number of predicted coords to consider")
     parser.add_argument("--flip", dest="flip", default=0, help="0 no flip, 1 flip")
-    parser.add_argument("--vid_name", dest="vid_name", default=None,
-                        help="Name of json file with origin_distance and future points")
+    parser.add_argument("--od", dest="od", default=None,
+                        help="Origin distance")
+    parser.add_argument("--fp", dest="fp", default=None,
+                        help="Number of future points")
 
     args = parser.parse_args()
 
     create_csv(csv_path=args.csv, config_path=args.input, config_f=args.folder, data_type=args.data_type,
-               len_seq=int(args.len_seq), flip=int(args.flip), vid_name=args.vid_name)
+               len_seq=int(args.len_seq), flip=int(args.flip), od=args.od, fp=args.fp)
 
 
 if __name__ == '__main__':

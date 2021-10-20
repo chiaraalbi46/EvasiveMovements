@@ -44,7 +44,7 @@ def create_json(path_json):
     write_json(d, path_save)
 
 
-def dir_process(folder, vid_name):
+def dir_process(folder, od, fp):  # origin_distance, future_points
 
     print(folder)
     #print(os.listdir(folder))
@@ -56,9 +56,9 @@ def dir_process(folder, vid_name):
         for s in sub_dir:  # video*
             path_dir_frame = folder + d + '/' + s + '/left_frames/'
             #TODO rivedere nome : o passi elementi in input o scrivi manualmente
-            path_json = folder + d + '/' + s + '/' + s + '/' + vid_name + '_traj.json'
+            path_json = folder + d + '/' + s + '/' + s + '_' + od + '_' + fp + '_traj.json'
             create_json(path_json)
-            print("\t folder: ", folder + d + '/' + s )
+            print("\t folder: ", folder + d + '/' + s)
             ssub_dir = os.listdir(path_dir_frame)
 
             for l in ssub_dir:  # frame*
@@ -70,11 +70,13 @@ def dir_process(folder, vid_name):
 def main():
     parser = argparse.ArgumentParser(description="Image augmentation: flipping the image vertically")
     parser.add_argument("--folder_path", dest="folder_p", default=None, help="Path of the dataset")
-    parser.add_argument("--vid_name", dest="vid_name", default=None,
-                        help="Name of json file with origin_distance and future points")
+    parser.add_argument("--od", dest="od", default=None,
+                        help="Origin distance")
+    parser.add_argument("--fp", dest="fp", default=None,
+                        help="Number of future points")
 
     args = parser.parse_args()
-    dir_process(folder=args.folder_p, vid_name=args.vid_name)
+    dir_process(folder=args.folder_p, od=args.od, fp=args.fp)
 
 
 if __name__ == "__main__":
