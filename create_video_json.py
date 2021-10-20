@@ -168,7 +168,7 @@ def folder_process(folder, dest_folder, step):
 
             create_video_json(svo_path, dest_path, step)
 
-
+#python create_video_json.py --video /home/aivdepth/OLD/video_dataset/svo/sx_walk_sx/video95.svo --dest /home/aivdepth/prova/
 def main():
     parser = argparse.ArgumentParser(description="Create the trajectories' file from a json file of a video sequence")
 

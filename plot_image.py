@@ -155,37 +155,34 @@ def image_coordinates(start_path, csv_path):  # video_path, path_calib_j, path_j
                 cv2.putText(img, 'Ground Truth', (100, 100), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
                 cv2.putText(img, 'Predicted', (100, 150), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
-                cv2.imwrite(name, img)
-
-
-
-#                 video_img.append(img)
+                #cv2.imwrite(name, img)
+               # video_img.append(img)
 #
 # #
 #
-#     writer = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'DIVX'), 10, size)
-#     for i in tqdm.tqdm(range(len(video_img))):
-#         writer.write(video_img[i])
-#         print('o', video_img[i])
-#     writer.release()
-#     print()
-#     print("Create video and store it in " + video_name)
+    # writer = cv2.VideoWriter('video_name.avi', cv2.VideoWriter_fourcc(*'DIVX'), 10, size)
+    # for i in tqdm.tqdm(range(len(video_img))):
+    #     writer.write(video_img[i])
+    #     #print('o', video_img[i])
+    # writer.release()
+    print()
+    print("Create video and store it in " + 'video_name')
 
 #         cv2.imshow('img', img)
 #         cv2.waitKey(0)
 
 #
 # # python trajectories_draw.py --json_path /home/aivdepth/datasets/images_dataset/normal/video29/
-def main():
-    parser = argparse.ArgumentParser(description="Create the trajectories' file from a csv file of a video sequence")
-    parser.add_argument("--csv_path", dest="csv_p", default=None, help="Path of the csv file of trajectory")
-    parser.add_argument("--start_path", dest="start_p", default=None, help="Initial path, where the dataset is located")
-
-    args = parser.parse_args()
-    image_coordinates(start_path=args.start_p, csv_path=args.csv_p)
+# def main():
+#     parser = argparse.ArgumentParser(description="Create the trajectories' file from a csv file of a video sequence")
+#     parser.add_argument("--csv_path", dest="csv_p", default=None, help="Path of the csv file of trajectory")
+#     parser.add_argument("--start_path", dest="start_p", default=None, help="Initial path, where the dataset is located")
+#
+#     args = parser.parse_args()
+#     image_coordinates(start_path=args.start_p, csv_path=args.csv_p)
 
 if __name__ == "__main__":
-    main()
-    # start_path = 'C:/Users/ninad/Desktop/frame_dataset/'
-    # csv_path = 'C:/Users/ninad/Desktop/video_guida/summarize_test.csv '
-    # get_coordinates(start_path, csv_path)
+    #main()
+    start_path = 'C:/Users/ninad/Desktop/frame_dataset/'
+    csv_path = 'C:/Users/ninad/Desktop/video_guida/summarize_test.csv '
+    get_coordinates(start_path, csv_path)
