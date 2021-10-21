@@ -154,10 +154,10 @@ def folder_process(folder, i_start, point_past, point_future, origin_distance, f
             video_json_path = json_folder + s + '.json'  # .../video*.json
             #print("\t video json path: ", video_json_path)
 
-            if flip == 0 :#or flip == 2:
+            if flip == 0 or flip == 2:
                 print('flip', type(flip), flip)
                 create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, json_folder)
-            if flip == 1 :#or flip == 2:
+            if flip == 1 or flip == 2:
                 pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future, json_folder)
                 create_json_flip(pathToTrajFile)
 
@@ -189,7 +189,7 @@ def main():
     if os.path.isdir(args.input):
         # esecuzione su cartella (e sottocartelle)
         folder_process(folder=args.input, i_start=int(args.start), point_past=int(args.past),
-                       point_future=int(args.future), origin_distance=int(args.origin_distance), flip=args.flip)
+                       point_future=int(args.future), origin_distance=int(args.origin_distance), flip=int(args.flip))
     else:
         # esecuzione singolo video
         create_traj_json(video_json_path=args.input, i_start=int(args.start), point_past=int(args.past),
