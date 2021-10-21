@@ -37,7 +37,36 @@ def origin_traj(i_start, xdata, zdata, angle, origin_distance, frame_index):
     return origin, angle_o, origin_index, origine_i
 
 
-def create_traj_json(video_json_path, step, i_start, point_past, point_future, origin_distance, dest_folder):
+def create_json_flip(path_json):
+    with open(path_json) as json_file:
+        d = json.load(json_file)
+
+        for i in range(len(d)):
+            for j in range(len(d[i]['Past'])):
+                d[i]['Past'][j][0] = -1*d[i]['Past'][j][0]
+            for j in range(len(d[i]['Future'])):
+                d[i]['Future'][j][0] = -1*d[i]['Future'][j][0]
+            #print(d[i]['Past'][0][0])
+
+    ap = path_json.split('/')
+
+    name_json = ap[len(ap)-1].split('.')[0] +'_flip.json'
+    #print(name_json)
+    path_save = '/'.join(path_json.split('/')[:len(ap) - 1]) + '/' + name_json
+    write_json(d, path_save)
+
+
+def get_path_json(video_json_path, origin_distance, point_future, dest_folder):
+    spl = video_json_path.split(os.sep)  # '/'
+    vid_name = spl[len(spl) - 1]
+    spl1 = vid_name.split('.')
+    vname = spl1[0]
+    final_name = vname + '_' + str(origin_distance) + '_' + str(point_future)  + '_traj.json'
+    pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
+    return pathToTrajFile
+
+
+def create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, dest_folder):
     point_future = point_future + 1  # +1 punto futuro (origine da escludere)
 
     with open(video_json_path) as json_file:
@@ -102,21 +131,14 @@ def create_traj_json(video_json_path, step, i_start, point_past, point_future, o
             present = []
             past = []
             f += 1
-
-    spl = video_json_path.split(os.sep)  # '/'
-    vid_name = spl[len(spl) - 1]
-    spl1 = vid_name.split('.')
-    vname = spl1[0]
-    final_name = vname + '_' + str(origin_distance) + '_' + str(point_future)  + '_traj.json'
-    pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
-
+    pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future, dest_folder)
     write_json(array, pathToTrajFile)
     for i in range(len(array)):
         print(array[i], '\n')
 
 
 # folder = 'D:\Dataset_Evasive_Movements\datasets\images_dataset\'
-def folder_process(folder, step, i_start, point_past, point_future, origin_distance):
+def folder_process(folder, i_start, point_past, point_future, origin_distance, flip):
     print(folder)
     print(os.listdir(folder))
     dirs = os.listdir(folder)
@@ -129,7 +151,12 @@ def folder_process(folder, step, i_start, point_past, point_future, origin_dista
             print("\t json folder: ", json_folder)
             video_json_path = json_folder + s + '.json'  # .../video*.json
             print("\t video json path: ", video_json_path)
-            create_traj_json(video_json_path, step, i_start, point_past, point_future, origin_distance, json_folder)
+
+            if flip == 0 or flip == 2:
+                create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, json_folder)
+            if flip == 1 or flip == 2:
+                pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future, json_folder)
+                create_json_flip(pathToTrajFile)
 
 
 def main():
@@ -149,17 +176,19 @@ def main():
     parser.add_argument("--dest_folder", dest="dest", default=None,
                         help="Path to the destination folder for the trajectories' file")
 
+    parser.add_argument("--flip", dest="flip", default=0, help="0 no flip, 1 flip")
+
     args = parser.parse_args()
 
     # folder_process(folder=args.input, i_start=int(args.start), point_past=int(args.past),
     # point_future=int(args.future),origin_distance=int(args.origin_distance))
     if os.path.isdir(args.input):
         # esecuzione su cartella (e sottocartelle)
-        folder_process(folder=args.input, step=args.step, i_start=int(args.start), point_past=int(args.past),
-                       point_future=int(args.future), origin_distance=int(args.origin_distance))
+        folder_process(folder=args.input, i_start=int(args.start), point_past=int(args.past),
+                       point_future=int(args.future), origin_distance=int(args.origin_distance), flip=args.flip)
     else:
         # esecuzione singolo video
-        create_traj_json(video_json_path=args.input, step=args.step, i_start=int(args.start), point_past=int(args.past),
+        create_traj_json(video_json_path=args.input, i_start=int(args.start), point_past=int(args.past),
                          point_future=int(args.future), origin_distance=int(args.origin_distance),
                          dest_folder=args.dest)
 

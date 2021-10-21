@@ -1,10 +1,8 @@
-from create_csv_file import right_slash
+from net_utilities import right_slash
 
 import os
 import cv2
 import argparse
-import json
-from net_utilities import write_json
 
 
 def flip_image(path_frame):
@@ -15,7 +13,7 @@ def flip_image(path_frame):
     #print('\f path_save', path_save)
     if not os.path.exists(path_save):
         os.mkdir(path_save)
-    #image_path = path_save + 'flip_' + nf[len(nf)-1] #todo filp si o no nel nome dell'immagine
+    #image_path = path_save + 'flip_' + nf[len(nf)-1]
     image_path = path_save + nf[len(nf) - 1]
     print('\f image_path: ', image_path)
     cv2.imwrite(image_path, img_flip_lr)
@@ -25,29 +23,30 @@ def flip_image(path_frame):
 
 
 #/home/aivdepth/datasets/images_dataset/sx_walk_sx/video270/video270_traj.json
-def create_json(path_json):
-    with open(path_json) as json_file:
-        d = json.load(json_file)
+# def create_json(path_json):
+#     with open(path_json) as json_file:
+#         d = json.load(json_file)
+#
+#         for i in range(len(d)):
+#             for j in range(len(d[i]['Past'])):
+#                 d[i]['Past'][j][0] = -1*d[i]['Past'][j][0]
+#             for j in range(len(d[i]['Future'])):
+#                 d[i]['Future'][j][0] = -1*d[i]['Future'][j][0]
+#             #print(d[i]['Past'][0][0])
+#
+#     ap = path_json.split('/')
+#
+#     name_json = ap[len(ap)-1].split('.')[0] +'_flip.json'
+#     #print(name_json)
+#     path_save = '/'.join(path_json.split('/')[:len(ap) - 1]) + '/' + name_json
+#     write_json(d, path_save)
 
-        for i in range(len(d)):
-            for j in range(len(d[i]['Past'])):
-                d[i]['Past'][j][0] = -1*d[i]['Past'][j][0]
-            for j in range(len(d[i]['Future'])):
-                d[i]['Future'][j][0] = -1*d[i]['Future'][j][0]
-            #print(d[i]['Past'][0][0])
 
-    ap = path_json.split('/')
-
-    name_json = ap[len(ap)-1].split('.')[0] +'_flip.json'
-    #print(name_json)
-    path_save = '/'.join(path_json.split('/')[:len(ap) - 1]) + '/' + name_json
-    write_json(d, path_save)
-
-
-def dir_process(folder, vid_name):
+def dir_process(folder):
 
     print(folder)
     #print(os.listdir(folder))
+    folder = right_slash(folder)
     dirs = os.listdir(folder)
     for d in dirs:  # normal / sx_* / dx_*
         #print("Subdir: ", d)
@@ -55,9 +54,9 @@ def dir_process(folder, vid_name):
 
         for s in sub_dir:  # video*
             path_dir_frame = folder + d + '/' + s + '/left_frames/'
-            #TODO rivedere nome : o passi elementi in input o scrivi manualmente
-            path_json = folder + d + '/' + s + '/' + s + '/' + vid_name + '_traj.json'
-            create_json(path_json)
+            
+            #path_json = folder + d + '/' + s + '/' + s + '/' + vid_name + '_traj.json'
+            #create_json(path_json)
             print("\t folder: ", folder + d + '/' + s )
             ssub_dir = os.listdir(path_dir_frame)
 
@@ -70,11 +69,9 @@ def dir_process(folder, vid_name):
 def main():
     parser = argparse.ArgumentParser(description="Image augmentation: flipping the image vertically")
     parser.add_argument("--folder_path", dest="folder_p", default=None, help="Path of the dataset")
-    parser.add_argument("--vid_name", dest="vid_name", default=None,
-                        help="Name of json file with origin_distance and future points")
 
     args = parser.parse_args()
-    dir_process(folder=args.folder_p, vid_name=args.vid_name)
+    dir_process(folder=args.folder_p)
 
 
 if __name__ == "__main__":
