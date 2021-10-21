@@ -33,6 +33,8 @@ def main():
                         help="define comet ml project folder")
     parser.add_argument("--name_exp", dest="name_exp", default=None,
                         help="define comet ml experiment")
+    parser.add_argument("--plot_step", dest="plot_step", default=2,
+                        help="number of graphics during train on comet")
 
     args = parser.parse_args()
 
@@ -135,7 +137,7 @@ def main():
             train(model=model, criterion=criterion, optimizer=optimizer, train_loader=train_loader,
                   val_loader=val_loader, epochs=int(args.epochs), val_period=int(args.period),
                   save_weights=save_weight_path, event_log_path=tensor_board_path, dev=args.device, cfg=cfg,
-                  exp=experiment, train_p=train_paths, val_p=val_paths)
+                  exp=experiment, train_p=train_paths, val_p=val_paths, plot_step=int(args.plot_step))
 
     ####################################################################################################################
     # TEST PHASE

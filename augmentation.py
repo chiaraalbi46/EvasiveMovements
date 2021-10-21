@@ -23,6 +23,7 @@ def flip_image(path_frame):
 
 
 #/home/aivdepth/datasets/images_dataset/sx_walk_sx/video270/video270_traj.json
+
 # def create_json(path_json):
 #     with open(path_json) as json_file:
 #         d = json.load(json_file)
@@ -44,6 +45,7 @@ def flip_image(path_frame):
 
 def dir_process(folder):
 
+
     print(folder)
     #print(os.listdir(folder))
     folder = right_slash(folder)
@@ -54,7 +56,6 @@ def dir_process(folder):
 
         for s in sub_dir:  # video*
             path_dir_frame = folder + d + '/' + s + '/left_frames/'
-            
             #path_json = folder + d + '/' + s + '/' + s + '/' + vid_name + '_traj.json'
             #create_json(path_json)
             print("\t folder: ", folder + d + '/' + s )
@@ -69,7 +70,6 @@ def dir_process(folder):
 def main():
     parser = argparse.ArgumentParser(description="Image augmentation: flipping the image vertically")
     parser.add_argument("--folder_path", dest="folder_p", default=None, help="Path of the dataset")
-
     args = parser.parse_args()
     dir_process(folder=args.folder_p)
 

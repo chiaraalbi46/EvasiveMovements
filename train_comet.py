@@ -26,7 +26,7 @@ def export_plot_from_tensorboard(event_path, save_path):
 
 
 def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_period, save_weights, event_log_path, dev,
-          cfg, exp, train_p, val_p):
+          cfg, exp, train_p, val_p, plot_step):
     limit = 1e-07
     global_min_val_loss = np.Inf
     iteration = 1
@@ -76,7 +76,8 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 else:
                     train_losses[i] = [loss.item()]
 
-                if (i+1) % 200 == 0:
+                num_plots = int(epochs / plot_step)
+                if (i+1) % num_plots == 0:
                     for k in range(len(out)):
                         predicted = out[k].detach().numpy()
                         real = labels[k].detach().numpy()
