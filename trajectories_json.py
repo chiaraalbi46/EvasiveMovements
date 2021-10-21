@@ -154,9 +154,10 @@ def folder_process(folder, i_start, point_past, point_future, origin_distance, f
             video_json_path = json_folder + s + '.json'  # .../video*.json
             #print("\t video json path: ", video_json_path)
 
-            if flip == 0 or flip == 2:
+            if flip == 0 :#or flip == 2:
+                print('flip', type(flip), flip)
                 create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, json_folder)
-            if flip == 1 or flip == 2:
+            if flip == 1 :#or flip == 2:
                 pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future, json_folder)
                 create_json_flip(pathToTrajFile)
 
