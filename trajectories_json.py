@@ -51,7 +51,7 @@ def create_json_flip(path_json):
     ap = path_json.split('/')
 
     name_json = ap[len(ap)-1].split('.')[0] +'_flip.json'
-    #print(name_json)
+    print(name_json)
     path_save = '/'.join(path_json.split('/')[:len(ap) - 1]) + '/' + name_json
     write_json(d, path_save)
 
@@ -152,13 +152,14 @@ def folder_process(folder, i_start, point_past, point_future, origin_distance, f
             json_folder = right_slash(os.path.join(folder, d, s)) + '/'  # + '/json/'
             print("\t json folder: ", json_folder)
             video_json_path = json_folder + s + '.json'  # .../video*.json
-            print("\t video json path: ", video_json_path)
+            #print("\t video json path: ", video_json_path)
 
             if flip == 0 or flip == 2:
                 create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, json_folder)
             if flip == 1 or flip == 2:
                 pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future, json_folder)
                 create_json_flip(pathToTrajFile)
+
 
 
 def main():
