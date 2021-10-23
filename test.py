@@ -4,12 +4,14 @@ import torch
 # from trajectory_images import save_video
 from configs.config import cfg
 import numpy as np
+from metrics_eval import ADE, FDE
 
 
 def test(model, criterion, model_path, test_loader, paths, dev, save_path):
-    num_correct = 0
     test_losses = []
-    distances = []
+
+    test_ades = []
+    test_fdes = []
 
     # csv_file = cfg.SAVE_RESULTS_PATH[model_type] + project + '/' + "summarize_test.csv"
     csv_file = save_path + "summarize_test.csv"
@@ -39,7 +41,16 @@ def test(model, criterion, model_path, test_loader, paths, dev, save_path):
 
                 test_loss = criterion(output, labels.float())
 
+                # ADE
+                test_ade = ADE(output, labels.float())
+
+                # FDE
+                test_fde = FDE(output, labels.float())
+
                 test_losses.append(test_loss.item())
+
+                test_ades.append(test_ade)
+                test_fdes.append(test_fde)
 
                 for i in range(len(output)):
                     predicted = output[i].detach().numpy()
@@ -54,27 +65,12 @@ def test(model, criterion, model_path, test_loader, paths, dev, save_path):
     print()
     print("Test loss: {:.3f}".format(np.mean(test_losses)))
     print('*' * 100)
+    print()
+    print("Test ADE: {:.3f}".format(np.mean(test_ades)))
+    print('*' * 100)
+    print()
+    print("Test FDE: {:.3f}".format(np.mean(test_fdes)))
+    print('*' * 100)
     # print('Starting Video Creation')
     #
     # save_video(video_name=video_name, csv_path=csv_file, len_seq=cfg.TEST.LEN_SEQUENCES, model_type=model_type)
-
-
-
-####
-# def test(test_loader, paths, dev, model_type):
-# array_json = []
-# for inputs, labels in test_loader:
-#     print("INPUTS: ", inputs)
-#     print("LABELS: ", labels)
-#     for i in range(len(inputs)):
-#         real = (labels[i].detach().numpy()).tolist()
-#         path = paths[current_path].replace("left_frames_processed", "left_frames")
-#
-#         # lines = [path, predicted.tolist(), real.tolist()]
-#         # filewriter.writerow(lines)
-#         dict_frame = {'path': path, 'real': real, }
-#         print("DICT: ", dict_frame)
-#         array_json.append(dict_frame)
-#         current_path += 1
-#
-# write_json(array_json, '/home/aivdepth/PROVA_OUTPUT_TEST1.json')
