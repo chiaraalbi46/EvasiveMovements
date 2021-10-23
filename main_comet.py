@@ -38,7 +38,8 @@ def main():
 
     args = parser.parse_args()
 
-    experiment = Experiment(project_name=args.name_proj)
+    project = args.name_proj
+    experiment = Experiment(project_name=project)
     experiment.set_name(args.name_exp)
 
     if args.train is None and args.test is None:
@@ -68,12 +69,18 @@ def main():
             #     timestamp)
             # todo aggiungere if se si fa in locale per path
 
-            save_weight_path = cfg.SAVE_WEIGHT_PATH[args.model_type] + 'weight_' + args.epochs + '_lenseq_' + str(
-                cfg.TRAIN.LEN_SEQUENCES) + '_' + str(timestamp)
+            save_weight_path = cfg.SAVE_WEIGHT_PATH[args.model_type] + project + '/' + 'weight_' + args.epochs + \
+                               '_lenseq_' + str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(timestamp)
 
             tensor_board_path = cfg.TENSORBOARD_PATH[
-                                    args.model_type] + "weight_" + args.epochs + '_lenseq_' + \
+                                    args.model_type] + project + '/' + "weight_" + args.epochs + '_lenseq_' + \
                                 str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(timestamp)
+
+            if not os.path.exists(save_weight_path):
+                os.makedirs(save_weight_path)
+
+            if not os.path.exists(tensor_board_path):
+                os.makedirs(tensor_board_path)
 
             print()
             print("SUMMARIZE : ")
@@ -116,9 +123,9 @@ def main():
             #     len_sequence=cfg.TRAIN.LEN_SEQUENCES, model_type=args.model_type, train_path=args.train,
             #     valid_path=args.valid)
             train_images, train_coordinates, train_paths = load_data_singleframe(csv_path=args.train,
-                                                                       len_sequence=cfg.TRAIN.LEN_SEQUENCES)
+                                                                                 len_sequence=cfg.TRAIN.LEN_SEQUENCES)
             valid_images, valid_coordinates, val_paths = load_data_singleframe(csv_path=args.valid,
-                                                                       len_sequence=cfg.TRAIN.LEN_SEQUENCES)
+                                                                               len_sequence=cfg.TRAIN.LEN_SEQUENCES)
 
             model, criterion, optimizer = initialize_model(model_type=args.model_type, cfg=cfg, mode='train')
 
@@ -162,8 +169,9 @@ def main():
             print("you are working with {} model".format(args.model_type))
             print()
 
-            # if not os.path.exists(cfg.SAVE_RESULTS_PATH):
-            #     os.mkdir(cfg.SAVE_RESULTS_PATH)
+            save_path = cfg.SAVE_RESULTS_PATH[args.model_type] + project + '/'
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
 
             test_images, test_coordinates, image_path = load_data_singleframe(csv_path=args.test,
                                                                               len_sequence=cfg.TEST.LEN_SEQUENCES)
@@ -176,7 +184,7 @@ def main():
                                      drop_last=True)
 
             test(model=model, criterion=criterion, model_path=args.model, test_loader=test_loader,
-                 paths=image_path, dev=args.device, model_type=args.model_type)  # exp=experiment
+                 paths=image_path, dev=args.device, save_path=save_path)  # exp=experiment
             # test(test_loader=test_loader,
             #      paths=image_path, dev=args.device, model_type=args.model_type)
 

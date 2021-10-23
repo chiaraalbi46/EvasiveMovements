@@ -33,7 +33,7 @@ def video_traj(filewriter, data, path, flip):
     # return filewriter
 
 
-def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp):  # origin_distance, future_points
+def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp, project):  # origin_distance, future_points
     config_path = config_path + config_f
     # file_path = config_path + data_type + '.json'
     file_path = right_slash(os.path.join(config_path, data_type + '.json'))
@@ -42,14 +42,14 @@ def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp
     with open(file_path, 'r') as jsonfile:
         d = json.load(jsonfile)
 
-    save_dir = right_slash(os.path.join(csv_path, data_type))
+    # save_dir = right_slash(os.path.join(csv_path, data_type))
+    save_dir = right_slash(os.path.join(csv_path, project, data_type))
     print("save_dir: ", save_dir)
 
     if not os.path.exists(save_dir):
-        os.mkdir(save_dir)
+        os.makedirs(save_dir)
 
-    save_path = right_slash(os.path.join(save_dir, data_type + '_' + config_f + '_' + str(
-        len_seq) + '_sequence.csv'))
+    save_path = right_slash(os.path.join(save_dir, data_type + '_' + config_f + '_' + str(len_seq) + '_sequence.csv'))
     print("save_path: ", save_path)
 
     with open(save_path, 'w') as csvfile:
@@ -85,15 +85,15 @@ def main():
     parser.add_argument("--len_seq", dest="len_seq", default=None,
                         help="Define the number of predicted coords to consider")
     parser.add_argument("--flip", dest="flip", default=0, help="0 no flip, 1 flip")
-    parser.add_argument("--od", dest="od", default=None,
-                        help="Origin distance")
-    parser.add_argument("--fp", dest="fp", default=None,
-                        help="Number of future points")
+    parser.add_argument("--od", dest="od", default=None, help="Origin distance")
+    parser.add_argument("--fp", dest="fp", default=None, help="Number of future points")
+    parser.add_argument("--project", dest="project", default=None, help="Name of the project folder.")
+
 
     args = parser.parse_args()
 
     create_csv(csv_path=args.csv, config_path=args.input, config_f=args.folder, data_type=args.data_type,
-               len_seq=int(args.len_seq), flip=int(args.flip), od=args.od, fp=args.fp)
+               len_seq=int(args.len_seq), flip=int(args.flip), od=args.od, fp=args.fp, project=args.project)
 
 
 if __name__ == '__main__':

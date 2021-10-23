@@ -6,12 +6,13 @@ from configs.config import cfg
 import numpy as np
 
 
-def test(model, criterion, model_path, test_loader, paths, dev, model_type):
+def test(model, criterion, model_path, test_loader, paths, dev, save_path):
     num_correct = 0
     test_losses = []
     distances = []
 
-    csv_file = cfg.SAVE_RESULTS_PATH[model_type] + "summarize_test.csv"
+    # csv_file = cfg.SAVE_RESULTS_PATH[model_type] + project + '/' + "summarize_test.csv"
+    csv_file = save_path + "summarize_test.csv"
     # video_name = dir_name + cfg.SAVE_VIDEO_PATH[model_type] + "summarize_video.avi"
 
     if os.path.exists(csv_file):
