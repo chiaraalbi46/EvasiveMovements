@@ -14,8 +14,8 @@ def transform_RT(xdata, zdata, i, origin, angle_o, f, count):
             zdata[i + count] - origin[f][1]) * math.cos(angle_o[f]), 3)
     # print('i', i, 'count', count)
     # Traslazione ? .. presente devesse essere [0, 0] ?
-    #x_rot_t = x_rot + origin[f][0]
-    #y_rot_t = y_rot + origin[f][1]
+    # x_rot_t = x_rot + origin[f][0]
+    # y_rot_t = y_rot + origin[f][1]
     new_point = [x_rot, y_rot]
     return new_point
 
@@ -43,14 +43,14 @@ def create_json_flip(path_json):
 
         for i in range(len(d)):
             for j in range(len(d[i]['Past'])):
-                d[i]['Past'][j][0] = -1*d[i]['Past'][j][0]
+                d[i]['Past'][j][0] = -1 * d[i]['Past'][j][0]
             for j in range(len(d[i]['Future'])):
-                d[i]['Future'][j][0] = -1*d[i]['Future'][j][0]
-            #print(d[i]['Past'][0][0])
+                d[i]['Future'][j][0] = -1 * d[i]['Future'][j][0]
+            # print(d[i]['Past'][0][0])
 
     ap = path_json.split('/')
 
-    name_json = ap[len(ap)-1].split('.')[0] +'_flip.json'
+    name_json = ap[len(ap) - 1].split('.')[0] + '_flip.json'
     print(name_json)
     path_save = '/'.join(path_json.split('/')[:len(ap) - 1]) + '/' + name_json
     write_json(d, path_save)
@@ -61,7 +61,7 @@ def get_path_json(video_json_path, origin_distance, point_future, dest_folder):
     vid_name = spl[len(spl) - 1]
     spl1 = vid_name.split('.')
     vname = spl1[0]
-    final_name = vname + '_' + str(origin_distance) + '_' + str(point_future)  + '_traj.json'
+    final_name = vname + '_' + str(origin_distance) + '_' + str(point_future) + '_traj.json'
     pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
     return pathToTrajFile
 
@@ -98,7 +98,7 @@ def create_traj_json(video_json_path, i_start, point_past, point_future, origin_
 
         if origine_i[f] == i and f < len(
                 origin) - 1:  # (i*step ) == origin_index[f] , and xdata[i] == origin[f][0] and zdata[i] == origin[f][1] and f < len(origin) - 1 :#and frame_index[i] % origin_distance == 0:
-            #present.append(origin[f])
+            # present.append(origin[f])
             # new_point = [xdata[i], zdata[i]]
             new_point = transform_RT(xdata, zdata, i, origin, angle_o, f, 0)
             present.append(new_point)
@@ -132,7 +132,7 @@ def create_traj_json(video_json_path, i_start, point_past, point_future, origin_
             past = []
             f += 1
 
-    pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future, dest_folder)
+    pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future - 1, dest_folder)  # point_future - 1
 
     write_json(array, pathToTrajFile)
     for i in range(len(array)):
@@ -152,7 +152,7 @@ def folder_process(folder, i_start, point_past, point_future, origin_distance, f
             json_folder = right_slash(os.path.join(folder, d, s)) + '/'  # + '/json/'
             print("\t json folder: ", json_folder)
             video_json_path = json_folder + s + '.json'  # .../video*.json
-            #print("\t video json path: ", video_json_path)
+            # print("\t video json path: ", video_json_path)
 
             if flip == 0 or flip == 2:
                 print('flip', type(flip), flip)
@@ -160,7 +160,6 @@ def folder_process(folder, i_start, point_past, point_future, origin_distance, f
             if flip == 1 or flip == 2:
                 pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future, json_folder)
                 create_json_flip(pathToTrajFile)
-
 
 
 def main():
@@ -180,7 +179,7 @@ def main():
     parser.add_argument("--dest_folder", dest="dest", default=None,
                         help="Path to the destination folder for the trajectories' file")
 
-    parser.add_argument("--flip", dest="flip", default=0, help="0 no flip, 1 flip")
+    parser.add_argument("--flip", dest="flip", default=0, help="0 no flip, 1 flip, 2 no flip and flip")
 
     args = parser.parse_args()
 
