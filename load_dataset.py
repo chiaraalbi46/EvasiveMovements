@@ -36,8 +36,6 @@ def load_data_singleframe(csv_path, len_sequence):
         if os.path.exists(path_frame[i]):
             images_c[i] = load_image(image_file=path_frame[i])
             tensor_list[i] = convert_to_vector(string=data_df["future_point"][i])
-        else:
-            print("NON ESISTE, ", path_frame[i])
 
 
     # da  [batch_size, depth, height, width, channels] in [batch_size, channels, depth, height, width] per nn.Conv2
@@ -53,6 +51,7 @@ def load_data_singleframe(csv_path, len_sequence):
 def load_image(image_file):
     print("Image file: ", image_file)
     img = cv2.imread(image_file)
+    print(type(img))
     # img = cv2.imread(image_file.strip(), -1)
 
     # height = img.shape[0]

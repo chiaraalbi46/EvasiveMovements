@@ -102,14 +102,14 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 #     train_fdes[i] = [fde]
 
                 num_plots = int(epochs / plot_step)
-                if (i+1) % num_plots == 0:
-                    for k in range(len(out)):
-                        predicted = out[k].detach().numpy()
-                        real = labels[k].detach().numpy()
-                        path = train_p[current_path].replace("left_frames_processed", "left_frames")
-                        # plot_data(real, predicted, exp, k, iteration, path, epoca, type_name)  # k, l, path
-                        plot_data(real, predicted, exp, k, (i + 1), path, iteration)  # step = epoca
-                        current_path += 1
+                # if (i+1) % num_plots == 0:
+                #     for k in range(len(out)):
+                #         predicted = out[k].detach().numpy()
+                #         real = labels[k].detach().numpy()
+                #         path = train_p[current_path].replace("left_frames_processed", "left_frames")
+                #         # plot_data(real, predicted, exp, k, iteration, path, epoca, type_name)  # k, l, path
+                #         plot_data(real, predicted, exp, k, (i + 1), path, iteration)  # step = epoca
+                #         current_path += 1
 
                 # tensorboard utilities
                 writer.add_scalar('Training/train_loss_value', loss.item(), iteration)

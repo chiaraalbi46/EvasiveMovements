@@ -39,7 +39,7 @@ def main():
     args = parser.parse_args()
 
     project = args.name_exp
-    experiment = Experiment(project_name=project)
+    experiment = Experiment(project_name=args.name_proj)
     experiment.set_name(args.name_exp)
 
     if args.train is None and args.test is None:
