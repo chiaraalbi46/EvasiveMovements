@@ -4,9 +4,7 @@ import pandas as pd
 import os
 import numpy as np
 import cv2
-import platform
 import argparse
-import json
 
 
 # IMAGE_HEIGHT = 720
@@ -14,11 +12,6 @@ import json
 IMAGE_HEIGHT = 90
 IMAGE_WIDTH = 160
 IMAGE_CHANNELS = 3
-
-
-def write_json(data, filename):
-    with open(filename, 'w') as f:
-        json.dump(data, f, indent=4)
 
 
 def load_data_singleframe(csv_path, len_sequence):
@@ -43,6 +36,8 @@ def load_data_singleframe(csv_path, len_sequence):
         if os.path.exists(path_frame[i]):
             images_c[i] = load_image(image_file=path_frame[i])
             tensor_list[i] = convert_to_vector(string=data_df["future_point"][i])
+        else:
+            print("NON ESISTE, ", path_frame[i])
 
 
     # da  [batch_size, depth, height, width, channels] in [batch_size, channels, depth, height, width] per nn.Conv2

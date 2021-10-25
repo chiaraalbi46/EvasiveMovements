@@ -79,27 +79,27 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 out = model(train_inputs, device)
 
                 loss = criterion(out, labels.float())
-
-                # ADE
-                ade = ADE(out, labels.float())
-
-                # ADE
-                fde = FDE(out, labels.float())
+                #
+                # # ADE
+                # ade = ADE(out, labels.float())
+                #
+                # # ADE
+                # fde = FDE(out, labels.float())
 
                 if i in train_losses:
                     train_losses[i].append(loss.item())
                 else:
                     train_losses[i] = [loss.item()]
 
-                if i in train_ades:
-                    train_ades[i].append(ade)
-                else:
-                    train_ades[i] = [ade]
-
-                if i in train_fdes:
-                    train_fdes[i].append(fde)
-                else:
-                    train_fdes[i] = [fde]
+                # if i in train_ades:
+                #     train_ades[i].append(ade)
+                # else:
+                #     train_ades[i] = [ade]
+                #
+                # if i in train_fdes:
+                #     train_fdes[i].append(fde)
+                # else:
+                #     train_fdes[i] = [fde]
 
                 num_plots = int(epochs / plot_step)
                 if (i+1) % num_plots == 0:
@@ -117,8 +117,8 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 # comet ml
                 exp.log_metric('train_loss_value', loss.item(), step=iteration)  # loss iteration (batch)
 
-                exp.log_metric('train_ade_value', ade, step=iteration)  # ade iteration (batch)
-                exp.log_metric('train_fde_value', fde, step=iteration)  #fde iteration (batch)
+                # exp.log_metric('train_ade_value', ade, step=iteration)  # ade iteration (batch)
+                # exp.log_metric('train_fde_value', fde, step=iteration)  #fde iteration (batch)
 
                 iteration += 1
 
@@ -132,8 +132,8 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
         # comet ml
         exp.log_metric('train_global_loss', sum(train_losses[i]) / len(train_losses[i]), step=i + 1)  # loss  epoca
 
-        exp.log_metric('train_global_ade', sum(train_ades[i]) / len(train_ades[i]), step=i + 1)  # ade epoca
-        exp.log_metric('train_global_fde', sum(train_fdes[i]) / len(train_fdes[i]), step=i + 1)  # fde epoca
+        # exp.log_metric('train_global_ade', sum(train_ades[i]) / len(train_ades[i]), step=i + 1)  # ade epoca
+        # exp.log_metric('train_global_fde', sum(train_fdes[i]) / len(train_fdes[i]), step=i + 1)  # fde epoca
 
         print("Epoch: {}/{}".format(i + 1, epochs),
               "Loss : {}".format(sum(train_losses[i]) / len(train_losses[i])))
@@ -159,26 +159,26 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
 
                         val_loss = criterion(val_out, val_labels.float())
 
-                        # ADE
-                        val_ade = ADE(val_out, val_labels.float())
-
-                        # FDE
-                        val_fde = FDE(val_out, val_labels.float())
+                        # # ADE
+                        # val_ade = ADE(val_out, val_labels.float())
+                        #
+                        # # FDE
+                        # val_fde = FDE(val_out, val_labels.float())
 
                         if i in val_losses:
                             val_losses[i].append(val_loss.item())
                         else:
                             val_losses[i] = [val_loss.item()]
 
-                        if i in val_ades:
-                            val_ades[i].append(val_ade)
-                        else:
-                            val_ades[i] = [val_ade]
-
-                        if i in val_fdes:
-                            val_fdes[i].append(val_fde)
-                        else:
-                            val_fdes[i] = [val_fde]
+                        # if i in val_ades:
+                        #     val_ades[i].append(val_ade)
+                        # else:
+                        #     val_ades[i] = [val_ade]
+                        #
+                        # if i in val_fdes:
+                        #     val_fdes[i].append(val_fde)
+                        # else:
+                        #     val_fdes[i] = [val_fde]
 
 
                         if (i + 1) % num_plots == 0:
@@ -198,16 +198,16 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                         # comet ml
                         exp.log_metric('valid_loss_value', val_loss.item(), step=iteration)
 
-                        exp.log_metric('valid_ade_value', val_ade, step=iteration)
-                        exp.log_metric('valid_fde_value', val_fde, step=iteration)
+                        # exp.log_metric('valid_ade_value', val_ade, step=iteration)
+                        # exp.log_metric('valid_fde_value', val_fde, step=iteration)
 
             writer.add_scalar('Validation/valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), i + 1)
 
             # comet ml
             exp.log_metric('valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), step=i + 1)  # loss  epoca
 
-            exp.log_metric('valid_global_ade', sum(val_ades[i]) / len(val_ades[i]), step=i + 1)  # ade  epoca
-            exp.log_metric('valid_global_fde', sum(val_fdes[i]) / len(val_fdes[i]), step=i + 1)  # fde  epoca
+            # exp.log_metric('valid_global_ade', sum(val_ades[i]) / len(val_ades[i]), step=i + 1)  # ade  epoca
+            # exp.log_metric('valid_global_fde', sum(val_fdes[i]) / len(val_fdes[i]), step=i + 1)  # fde  epoca
 
             print("End valid test")
             print("Train Loss: {:.3f} - ".format(sum(train_losses[i]) / len(train_losses[i])),

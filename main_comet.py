@@ -38,7 +38,7 @@ def main():
 
     args = parser.parse_args()
 
-    project = args.name_proj
+    project = args.name_exp
     experiment = Experiment(project_name=project)
     experiment.set_name(args.name_exp)
 
