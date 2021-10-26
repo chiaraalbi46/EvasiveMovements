@@ -181,7 +181,7 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                         #     val_fdes[i] = [val_fde]
 
                         # if (i + 1) % num_plots == 0:
-                        if (i + 1) % 200 == 0:
+                        if (i + 1) % 4 == 0:
                         #if (i + 1) % num_plots == 0:
                             for k in range(len(val_out)):
                                 val_predicted = val_out[k].detach().numpy()
