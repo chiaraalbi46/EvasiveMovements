@@ -188,7 +188,7 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                                 val_real = val_labels[k].detach().numpy()
                                 #print('predetti', val_predicted)
                                 #print('real', val_real)
-                                if 'flip' in val_path:
+                                if 'flip' in val_p[current_path]:
                                     print('path', val_path)
                                 val_path = val_p[current_path].replace("left_frames_processed", "left_frames")
 
