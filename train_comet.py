@@ -28,7 +28,7 @@ def export_plot_from_tensorboard(event_path, save_path):
 
 def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_period, save_weights, event_log_path, dev,
           cfg, exp, train_p, val_p, plot_step):
-    print('boh', val_loader)
+
     limit = 1e-07
     global_min_val_loss = np.Inf
     iteration = 1
@@ -159,6 +159,9 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 with exp.context_manager('validation'):
 
                     for val_image, val_labels in val_loader:
+                        print('image', val_image)
+                        print('labe', val_labels)
+                        print()
 
                         val_image = val_image.to(device)
 
