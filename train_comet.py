@@ -12,7 +12,7 @@ from trajectory_images import plot_data
 
 from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
 import matplotlib.pyplot as plt
-from metrics_eval import ADE, FDE
+#from metrics_eval import ADE, FDE
 
 
 def export_plot_from_tensorboard(event_path, save_path):
@@ -155,6 +155,7 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                     for val_image, val_labels in val_loader:
 
                         val_image = val_image.to(device)
+
                         val_out = model(val_image.float(), device)
 
                         val_loss = criterion(val_out, val_labels.float())
@@ -185,7 +186,7 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                             for k in range(len(val_out)):
                                 val_predicted = val_out[k].detach().numpy()
                                 val_real = val_labels[k].detach().numpy()
-                                print('predetti', val_predicted)
+                                #print('predetti', val_predicted)
                                 val_path = val_p[current_path].replace("left_frames_processed", "left_frames")
 
                                 # plot_data(val_real, val_predicted, exp, k, iteration, val_path, epoca, type_name)
