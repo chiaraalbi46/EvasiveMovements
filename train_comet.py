@@ -180,18 +180,17 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                         # else:
                         #     val_fdes[i] = [val_fde]
 
-                        # if (i + 1) % num_plots == 0:
-                        if (i + 1) % 4 == 0:
-                        #if (i + 1) % num_plots == 0:
+
+                        if (i + 1) % num_plots == 0:
                             for k in range(len(val_out)):
                                 val_predicted = val_out[k].detach().numpy()
                                 val_real = val_labels[k].detach().numpy()
-
+                                print('predetti', val_predicted)
                                 val_path = val_p[current_path].replace("left_frames_processed", "left_frames")
 
                                 # plot_data(val_real, val_predicted, exp, k, iteration, val_path, epoca, type_name)
                                 plot_data(val_real, val_predicted, exp, k, (i + 1), val_path, iteration)
-
+                                print()
                                 current_path += 1
 
                         writer.add_scalar('Validation/valid_loss_value', val_loss.item(), iteration)
