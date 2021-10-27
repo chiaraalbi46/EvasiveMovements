@@ -159,9 +159,7 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 with exp.context_manager('validation'):
 
                     for val_image, val_labels in val_loader:
-                        print('image', val_image)
-                        print('labe', val_labels)
-                        print()
+                        
 
                         val_image = val_image.to(device)
 
