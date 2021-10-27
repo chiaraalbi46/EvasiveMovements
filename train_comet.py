@@ -28,6 +28,7 @@ def export_plot_from_tensorboard(event_path, save_path):
 
 def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_period, save_weights, event_log_path, dev,
           cfg, exp, train_p, val_p, plot_step):
+    print('boh', val_loader)
     limit = 1e-07
     global_min_val_loss = np.Inf
     iteration = 1
@@ -106,7 +107,12 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 #     for k in range(len(out)):
                 #         predicted = out[k].detach().numpy()
                 #         real = labels[k].detach().numpy()
-                #         path = train_p[current_path].replace("left_frames_processed", "left_frames")
+                         # if 'flip' in train_p[current_path]:
+                            #   print('path', val_path)
+                          #   path = train_p[current_path].replace("left_frames_flip_processed", "left_frames_flip")
+                          #else:
+                            # path = val_p[current_path].replace("left_frames_processed", "left_frames")
+                #         #path = train_p[current_path].replace("left_frames_processed", "left_frames")
                 #         # plot_data(real, predicted, exp, k, iteration, path, epoca, type_name)  # k, l, path
                 #         plot_data(real, predicted, exp, k, (i + 1), path, iteration)  # step = epoca
                 #         current_path += 1
@@ -188,13 +194,13 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                                 val_real = val_labels[k].detach().numpy()
                                 #print('predetti', val_predicted)
                                 #print('real', val_real)
-                                #if 'flip' in val_p[current_path]:
+                                if 'flip' in val_p[current_path]:
                                  #   print('path', val_path)
-                                val_path = val_p[current_path].replace("left_frames_processed", "left_frames")
-                                print('nuovo', val_path)
+                                    val_path = val_p[current_path].replace("left_frames_flip_processed", "left_frames_flip")
+                                else:
+                                    val_path = val_p[current_path].replace("left_frames_processed", "left_frames")
                                 # plot_data(val_real, val_predicted, exp, k, iteration, val_path, epoca, type_name)
                                 plot_data(val_real, val_predicted, exp, k, (i + 1), val_path, iteration)
-                                print()
                                 current_path += 1
 
                         writer.add_scalar('Validation/valid_loss_value', val_loss.item(), iteration)
