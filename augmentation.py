@@ -9,20 +9,21 @@ def flip_image(path_frame):
     img = cv2.imread(path_frame.strip(), -1)
     img_flip_lr = cv2.flip(img, 1)
     nf = path_frame.split('/')
-    path_save = '/'.join(nf[:len(nf)-1]) + '_flip/'
-    #print('\f path_save', path_save)
+    path_save = '/'.join(nf[:len(nf) - 1]) + '_flip/'
+    # print('\f path_save', path_save)
     if not os.path.exists(path_save):
         os.mkdir(path_save)
-    #image_path = path_save + 'flip_' + nf[len(nf)-1]
+    # image_path = path_save + 'flip_' + nf[len(nf)-1]
     image_path = path_save + nf[len(nf) - 1]
     print('\f image_path: ', image_path)
     cv2.imwrite(image_path, img_flip_lr)
+
 
 # path = '/home/aivdepth/datasets/images_dataset'
 # /home/aivdepth/datasets/images_dataset/sx_walk_sx/video270/left_frames
 
 
-#/home/aivdepth/datasets/images_dataset/sx_walk_sx/video270/video270_traj.json
+# /home/aivdepth/datasets/images_dataset/sx_walk_sx/video270/video270_traj.json
 
 # def create_json(path_json):
 #     with open(path_json) as json_file:
@@ -44,27 +45,25 @@ def flip_image(path_frame):
 
 
 def dir_process(folder):
-
-
     print(folder)
-    #print(os.listdir(folder))
+    # print(os.listdir(folder))
     folder = right_slash(folder)
     dirs = os.listdir(folder)
     for d in dirs:  # normal / sx_* / dx_*
-        #print("Subdir: ", d)
+        # print("Subdir: ", d)
         sub_dir = os.listdir(folder + d)
 
         for s in sub_dir:  # video*
             path_dir_frame = folder + d + '/' + s + '/left_frames/'
-            #path_json = folder + d + '/' + s + '/' + s + '/' + vid_name + '_traj.json'
-            #create_json(path_json)
-            print("\t folder: ", folder + d + '/' + s )
+            # path_json = folder + d + '/' + s + '/' + s + '/' + vid_name + '_traj.json'
+            # create_json(path_json)
+            print("\t folder: ", folder + d + '/' + s)
             ssub_dir = os.listdir(path_dir_frame)
 
             for l in ssub_dir:  # frame*
                 path_frame = path_dir_frame + l
                 flip_image(path_frame)
-                #print(path_frame)
+                # print(path_frame)
 
 
 def main():
@@ -75,7 +74,7 @@ def main():
 
 
 if __name__ == "__main__":
-#    # create_json()
-     main()
+    #    # create_json()
+    main()
 #     folder = 'C:/Users/ninad/Desktop/frame_dataset/datasets/images_dataset/'
 #     dir_process(folder)

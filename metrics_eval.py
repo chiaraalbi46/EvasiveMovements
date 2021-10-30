@@ -1,7 +1,6 @@
 """ Prove calcolo metriche ADE, FDE """
 
 import numpy as np
-import pickle
 
 
 # idee
