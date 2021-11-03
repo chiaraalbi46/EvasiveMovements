@@ -35,9 +35,12 @@ def main():
                         help="define comet ml experiment")
     parser.add_argument("--plot_step", dest="plot_step", default=2,
                         help="number of graphics during train on comet")
+    parser.add_argument("--shuffle_train", dest="shuffle_train", default=None,  # False
+                        help="number of graphics during train on comet")
 
     args = parser.parse_args()
 
+    print("SHUFFLE TRAIN: ", bool(args.shuffle_train))
     project = args.name_exp
     experiment = Experiment(project_name=args.name_proj)
     experiment.set_name(args.name_exp)
@@ -130,7 +133,7 @@ def main():
 
             # train_loader = DataLoader(train_data, shuffle=cfg.TRAIN.SHUFFLE_T, batch_size=cfg.TRAIN.BATCH_SIZE,
             #                           drop_last=True)
-            train_loader = DataLoader(train_data, shuffle=False, batch_size=cfg.TRAIN.BATCH_SIZE,
+            train_loader = DataLoader(train_data, shuffle=bool(args.shuffle_train), batch_size=cfg.TRAIN.BATCH_SIZE,
                                       drop_last=True)
             val_loader = DataLoader(val_data, shuffle=cfg.TRAIN.SHUFFLE_V, batch_size=cfg.TRAIN.BATCH_SIZE,
                                     drop_last=True)
