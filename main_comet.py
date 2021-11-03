@@ -112,12 +112,6 @@ def main():
 
             experiment.log_parameters(hyper_params)
 
-            if not os.path.exists(save_weight_path):
-                os.mkdir(save_weight_path)
-
-            if not os.path.exists(tensor_board_path):
-                os.mkdir(tensor_board_path)
-
             ##### todo
             # train_images, valid_images, train_coordinates, valid_coordinates = load_dataset(
             #     len_sequence=cfg.TRAIN.LEN_SEQUENCES, model_type=args.model_type, train_path=args.train,

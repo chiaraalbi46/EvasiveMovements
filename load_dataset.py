@@ -51,7 +51,7 @@ def load_data_singleframe(csv_path, len_sequence):
 def load_image(image_file):
     print("Image file: ", image_file)
     img = cv2.imread(image_file)
-    print(type(img))
+    #print(type(img))
     # img = cv2.imread(image_file.strip(), -1)
 
     # height = img.shape[0]
