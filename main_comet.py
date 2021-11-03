@@ -35,9 +35,12 @@ def main():
                         help="define comet ml experiment")
     parser.add_argument("--plot_step", dest="plot_step", default=2,
                         help="number of graphics during train on comet")
+    parser.add_argument("--shuffle_train", dest="shuffle_train", default=None,  # False
+                        help="number of graphics during train on comet")
 
     args = parser.parse_args()
 
+    print("SHUFFLE TRAIN: ", bool(args.shuffle_train))
     project = args.name_exp
     experiment = Experiment(project_name=args.name_proj)
     experiment.set_name(args.name_exp)
@@ -112,12 +115,6 @@ def main():
 
             experiment.log_parameters(hyper_params)
 
-            if not os.path.exists(save_weight_path):
-                os.mkdir(save_weight_path)
-
-            if not os.path.exists(tensor_board_path):
-                os.mkdir(tensor_board_path)
-
             ##### todo
             # train_images, valid_images, train_coordinates, valid_coordinates = load_dataset(
             #     len_sequence=cfg.TRAIN.LEN_SEQUENCES, model_type=args.model_type, train_path=args.train,
@@ -136,7 +133,7 @@ def main():
 
             # train_loader = DataLoader(train_data, shuffle=cfg.TRAIN.SHUFFLE_T, batch_size=cfg.TRAIN.BATCH_SIZE,
             #                           drop_last=True)
-            train_loader = DataLoader(train_data, shuffle=False, batch_size=cfg.TRAIN.BATCH_SIZE,
+            train_loader = DataLoader(train_data, shuffle=bool(args.shuffle_train), batch_size=cfg.TRAIN.BATCH_SIZE,
                                       drop_last=True)
             val_loader = DataLoader(val_data, shuffle=cfg.TRAIN.SHUFFLE_V, batch_size=cfg.TRAIN.BATCH_SIZE,
                                     drop_last=True)

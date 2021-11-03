@@ -115,10 +115,10 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                 writer.add_scalar('Training/train_loss_value', loss.item(), iteration)
 
                 # comet ml
-                exp.log_metric('train_loss_value', loss.item(), step=iteration)  # loss iteration (batch)
+                # exp.log_metric('train_loss_value', loss.item(), step=iteration)  # loss iteration (batch)
 
-                exp.log_metric('train_ade_value', ade, step=iteration)  # ade iteration (batch)
-                exp.log_metric('train_fde_value', fde, step=iteration)  # fde iteration (batch)
+                # exp.log_metric('train_ade_value', ade, step=iteration)  # ade iteration (batch)
+                # exp.log_metric('train_fde_value', fde, step=iteration)  # fde iteration (batch)
 
                 iteration += 1
 
@@ -198,10 +198,10 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
                         writer.add_scalar('Validation/valid_loss_value', val_loss.item(), iteration)
 
                         # comet ml
-                        exp.log_metric('valid_loss_value', val_loss.item(), step=iteration)
-
-                        exp.log_metric('valid_ade_value', val_ade, step=iteration)
-                        exp.log_metric('valid_fde_value', val_fde, step=iteration)
+                        # exp.log_metric('valid_loss_value', val_loss.item(), step=iteration)
+                        #
+                        # exp.log_metric('valid_ade_value', val_ade, step=iteration)
+                        # exp.log_metric('valid_fde_value', val_fde, step=iteration)
 
             writer.add_scalar('Validation/valid_global_loss', sum(val_losses[i]) / len(val_losses[i]), i + 1)
 
