@@ -1,16 +1,15 @@
 import torch
 import torch.nn as nn
 from model import NET
-# from utils.read_csv import load_data_multiframe, load_data_depth, load_data_singleframe
 
 
-def initialize_model(model_type, cfg, mode):
+def initialize_model(model_type, cfg, mode, len_seq):  # ho aggiunto il passaggio di len_seq ...rivedere
     if mode == 'train':
         batch_size = cfg.TRAIN.BATCH_SIZE
-        len_seq = cfg.TRAIN.LEN_SEQUENCES
+        # len_seq = cfg.TRAIN.LEN_SEQUENCES
     elif mode == 'test':
         batch_size = cfg.TEST.BATCH_SIZE
-        len_seq = cfg.TEST.LEN_SEQUENCES
+        # len_seq = cfg.TEST.LEN_SEQUENCES
     else:
         print('Error occurrent')
         exit()

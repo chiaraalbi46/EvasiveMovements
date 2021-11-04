@@ -125,7 +125,9 @@ def main():
             # cfg.TRAIN.LEN_SEQUENCES
             valid_images, valid_coordinates, val_paths = load_data_singleframe(csv_path=args.valid, len_sequence=len_seq)
 
-            model, criterion, optimizer = initialize_model(model_type=args.model_type, cfg=cfg, mode='train')
+            # model, criterion, optimizer = initialize_model(model_type=args.model_type, cfg=cfg, mode='train')
+            model, criterion, optimizer = initialize_model(model_type=args.model_type, cfg=cfg, mode='train',
+                                                           len_seq=len_seq)  # add len_seq
 
             experiment.set_model_graph(model)
 
