@@ -7,7 +7,6 @@ from torch.utils.data import TensorDataset, DataLoader
 from configs.config import cfg
 from initialize_model import initialize_model
 from load_dataset import load_data_singleframe
-# from test_comet import test
 from test import test
 from train_comet import train
 
@@ -37,10 +36,15 @@ def main():
                         help="number of graphics during train on comet")
     parser.add_argument("--shuffle_train", dest="shuffle_train", default=None,  # False
                         help="number of graphics during train on comet")
+    parser.add_argument("--len_seq", dest="len_seq", default=10,
+                        help="number of future points predicted (sequence lenght)")  # per train, validation e test
+    # TODO:rivedere ...
+    # prenderebbe i valori del config ma per ora passiamolo perchè dobbiamo fare prove con 10/30
 
     args = parser.parse_args()
 
     print("SHUFFLE TRAIN: ", bool(args.shuffle_train))
+    len_seq = int(args.len_seq)
     project = args.name_exp
     experiment = Experiment(project_name=args.name_proj)
     experiment.set_name(args.name_exp)
@@ -73,11 +77,11 @@ def main():
             # todo aggiungere if se si fa in locale per path
 
             save_weight_path = cfg.SAVE_WEIGHT_PATH[args.model_type] + project + '/' + 'weight_' + args.epochs + \
-                               '_lenseq_' + str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(timestamp)
+                               '_lenseq_' + str(len_seq) + '_' + str(timestamp)
 
             tensor_board_path = cfg.TENSORBOARD_PATH[
                                     args.model_type] + project + '/' + "weight_" + args.epochs + '_lenseq_' + \
-                                str(cfg.TRAIN.LEN_SEQUENCES) + '_' + str(timestamp)
+                                str(len_seq) + '_' + str(timestamp)
 
             if not os.path.exists(save_weight_path):
                 os.makedirs(save_weight_path)
@@ -96,7 +100,7 @@ def main():
             print("batch size: {}".format(cfg.TRAIN.BATCH_SIZE))
             print("learning rate: {}".format(cfg.TRAIN.LEARNING_RATE))
             print("GPU device: {}".format(args.device))
-            print("len_seq: {}".format(cfg.TRAIN.LEN_SEQUENCES))
+            print("len_seq: {}".format(args.len_seq))  # cfg.TRAIN.LEN_SEQUENCES
             print("hidden_dimension: {}".format(cfg.DIMENSION[args.model_type]))
             print("Loss Function: {}".format(cfg.TRAIN.LOSS))
             print("Optimizer: {}".format(cfg.TRAIN.OPTIMIZER))
@@ -116,13 +120,10 @@ def main():
             experiment.log_parameters(hyper_params)
 
             ##### todo
-            # train_images, valid_images, train_coordinates, valid_coordinates = load_dataset(
-            #     len_sequence=cfg.TRAIN.LEN_SEQUENCES, model_type=args.model_type, train_path=args.train,
-            #     valid_path=args.valid)
-            train_images, train_coordinates, train_paths = load_data_singleframe(csv_path=args.train,
-                                                                                 len_sequence=cfg.TRAIN.LEN_SEQUENCES)
-            valid_images, valid_coordinates, val_paths = load_data_singleframe(csv_path=args.valid,
-                                                                               len_sequence=cfg.TRAIN.LEN_SEQUENCES)
+
+            train_images, train_coordinates, train_paths = load_data_singleframe(csv_path=args.train, len_sequence=len_seq)
+            # cfg.TRAIN.LEN_SEQUENCES
+            valid_images, valid_coordinates, val_paths = load_data_singleframe(csv_path=args.valid, len_sequence=len_seq)
 
             model, criterion, optimizer = initialize_model(model_type=args.model_type, cfg=cfg, mode='train')
 
@@ -161,7 +162,7 @@ def main():
             print("batch size: {}".format(cfg.TEST.BATCH_SIZE))
             print("hidden dimension: {}".format(cfg.DIMENSION[args.model_type]))
             print("GPU device: {}".format(args.device))
-            print("len_seq: {}".format(cfg.TEST.LEN_SEQUENCES))
+            print("len_seq: {}".format(len_seq))  # cfg.TEST.LEN_SEQUENCES
             print("Loss Function: {}".format(cfg.TRAIN.LOSS))
             print("you are working with {} model".format(args.model_type))
             print()
@@ -171,9 +172,10 @@ def main():
                 os.makedirs(save_path)
 
             test_images, test_coordinates, image_path = load_data_singleframe(csv_path=args.test,
-                                                                              len_sequence=cfg.TEST.LEN_SEQUENCES)
+                                                                              len_sequence=len_seq)
+            # cfg.TEST.LEN_SEQUENCES
 
-            model, criterion = initialize_model(model_type=args.model_type, cfg=cfg, mode='test')
+            model, criterion = initialize_model(model_type=args.model_type, cfg=cfg, mode='teTRAIst')
 
             test_data = TensorDataset(torch.from_numpy(test_images), torch.from_numpy(test_coordinates))
 
@@ -182,8 +184,6 @@ def main():
 
             test(model=model, criterion=criterion, model_path=args.model, test_loader=test_loader,
                  paths=image_path, dev=args.device, save_path=save_path)  # exp=experiment
-            # test(test_loader=test_loader,
-            #      paths=image_path, dev=args.device, model_type=args.model_type)
 
 
 if __name__ == '__main__':
