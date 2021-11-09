@@ -32,16 +32,12 @@ def create_video_json(video_path, dest_folder, step):
     print(vname)
     final_name = vname + '.json'
 
-    if platform.system() is 'Windows' and '\\' in dest_folder:
-        dest_folder = dest_folder.replace('\\', '/')
-        print("dest folder traformato: ", dest_folder)
-
-    json_path = dest_folder + '/' + final_name  # slash   # TODO: mettere /json/
+    json_path = right_slash(dest_folder + '/' + final_name)
     print(json_path)
     images_path = dest_folder + '/left_frames/'
     if not os.path.exists(images_path):
         print("Creo la cartella left frames")
-        os.mkdir(images_path)
+        os.makedirs(images_path)
 
     # Create a ZED camera object
     zed = sl.Camera()
@@ -86,9 +82,9 @@ def create_video_json(video_path, dest_folder, step):
 
                     # Display the translation and timestamp
                     translation = py_translation
-                    tx = round(camera_pose.get_translation(translation).get()[0], 3)
-                    ty = round(camera_pose.get_translation(translation).get()[1], 3)
-                    tz = round(camera_pose.get_translation(translation).get()[2], 3)
+                    tx = camera_pose.get_translation(translation).get()[0]  # round
+                    ty = camera_pose.get_translation(translation).get()[1]
+                    tz = camera_pose.get_translation(translation).get()[2]
                     print("Translation: Tx: {0}, Ty: {1}, Tz {2}, Timestamp: {3}\n".format(tx, ty, tz,
                                                                                            camera_pose.timestamp.get_seconds()))
 
@@ -168,7 +164,7 @@ def folder_process(folder, dest_folder, step):
 
             create_video_json(svo_path, dest_path, step)
 
-#python create_video_json.py --video /home/aivdepth/OLD/video_dataset/svo/sx_walk_sx/video95.svo --dest /home/aivdepth/prova/
+
 def main():
     parser = argparse.ArgumentParser(description="Create the trajectories' file from a json file of a video sequence")
 

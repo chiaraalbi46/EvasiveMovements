@@ -8,10 +8,10 @@ from net_utilities import write_json
 
 def transform_RT(xdata, zdata, i, origin, angle_o, f, count):
     # Rotazione (angolo in radianti)
-    x_rot = round((xdata[i + count] - origin[f][0]) * math.cos(angle_o[f]) - (
-            zdata[i + count] - origin[f][1]) * math.sin(angle_o[f]), 3)
-    y_rot = round((xdata[i + count] - origin[f][0]) * math.sin(angle_o[f]) + (
-            zdata[i + count] - origin[f][1]) * math.cos(angle_o[f]), 3)
+    x_rot = (xdata[i + count] - origin[f][0]) * math.cos(angle_o[f]) - (
+            zdata[i + count] - origin[f][1]) * math.sin(angle_o[f])  # round
+    y_rot = (xdata[i + count] - origin[f][0]) * math.sin(angle_o[f]) + (
+            zdata[i + count] - origin[f][1]) * math.cos(angle_o[f])
     # print('i', i, 'count', count)
     # Traslazione ? .. presente devesse essere [0, 0] ?
     # x_rot_t = x_rot + origin[f][0]
@@ -167,7 +167,7 @@ def main():
 
     parser.add_argument("--video_json_path", dest="input", default=None, help="Path of the json file of a video")
     parser.add_argument("--i_start", dest="start", default=0, help="Initial system origin")
-    parser.add_argument("--step", dest="step", default=10, help="Step")
+    # parser.add_argument("--step", dest="step", default=10, help="Step")
 
     parser.add_argument("--point_past", dest="past", default=5,
                         help="Number of past points to remap in the new reference system")

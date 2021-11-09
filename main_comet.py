@@ -46,8 +46,8 @@ def main():
     print("SHUFFLE TRAIN: ", bool(args.shuffle_train))
     len_seq = int(args.len_seq)
     project = args.name_exp
-    experiment = Experiment(project_name=args.name_proj)
-    experiment.set_name(args.name_exp)
+    # experiment = Experiment(project_name=args.name_proj)
+    # experiment.set_name(args.name_exp)
 
     if args.train is None and args.test is None:
         print("you have to decide : do train or test")
@@ -57,6 +57,9 @@ def main():
     # TRAIN PHASE
     ####################################################################################################################
     if args.test is None:
+
+        experiment = Experiment(project_name=args.name_proj)
+        experiment.set_name(args.name_exp)
 
         if args.valid is None:
             print("please insert valid")
