@@ -15,7 +15,7 @@ from load_dataset import convert_to_vector
 # cx : Optical center along x axis, defined in pixels (usually close to width/2).
 
 # C:\Users\ninad\Desktop\video_guida\summarize_test.csv
-def get_coordinates(start_path, csv_path):
+def get_coordinates(csv_path):
     csv_path = right_slash(csv_path)
     data_df = pd.read_csv(csv_path, error_bad_lines=False, names=["image_path", "predicted", "real"])
 
@@ -99,17 +99,17 @@ def get_data_proj_2(data):
         data_proj.append(tmp)
     return data_proj
 
-
-def image_coordinates(start_path, csv_path, p_result):  # video_path, path_calib_j, path_json):
+def image_coordinates(csv_path, p_result): 
     # video_path = 'C:/Users/ninad/Desktop/video_guida/194/video194.avi'
 
     # start_path = 'C:/Users/ninad/Desktop/frame_dataset/'
     # csv_path = 'C:/Users/ninad/Desktop/video_guida/summarize_test.csv '
 
-    predicted, real, path = get_coordinates(start_path, csv_path)
+    predicted, real, path = get_coordinates(csv_path)
 
     pred_proj = get_data_proj_2(predicted)
     real_proj = get_data_proj_2(real)
+    print('real: ', real_proj)
 
     # pred_proj = get_data_proj(predicted)
     # real_proj = get_data_proj(real)
@@ -137,18 +137,27 @@ def image_coordinates(start_path, csv_path, p_result):  # video_path, path_calib
                 x_pred = int(pred_proj[j][i][0])
                 y_pred = int(pred_proj[j][i][1])
 
-                print('x_pred', x_pred, 'y_pred', y_pred, '  x_real', x_real, 'y_real', y_real)
-                cv2.circle(img, (x_real, y_real), 3, (0, 0, 255), 4)
-                cv2.circle(img, (x_pred, y_pred), 3, (0, 255, 0), 4)
+                # print('x', x, 'y', y)
+                if (i % 10) == 0:   # prendo ogni 10 frame 
+                    cv2.circle(img, (x_real, y_real), 3, (0, 0, 255), 4)
+
+                if i < 10:  # prendo i primi 10 punti
+                    cv2.circle(img, (x_pred, y_pred), 3, (0, 255, 0), 4)
+
 
                 if (i < (len(real_proj[j]) - 1)):
                     next_x_real = math.ceil(real_proj[j][i + 1][0])
                     next_y_real = math.ceil(real_proj[j][i + 1][1])
-                    cv2.line(img, (x_real, y_real), (next_x_real, next_y_real), (0, 0, 222), 2)
+                    if (i % 10) == 0:
+                       cv2.line(img, (x_real, y_real), (next_x_real, next_y_real), (0, 0, 222), 2)
 
                     next_x_pred = math.ceil(pred_proj[j][i + 1][0])
                     next_y_pred = math.ceil(pred_proj[j][i + 1][1])
-                    cv2.line(img, (x_pred, y_pred), (next_x_pred, next_y_pred), (0, 222, 0), 2)
+
+                    
+                    if i < 10:
+                       cv2.line(img, (x_pred, y_pred), (next_x_pred, next_y_pred), (0, 222, 0), 2)
+
             ap = path_frame.split('/')
             name_frame = ap[len(ap) - 1]
             path_result = p_result + '/' + ap[len(ap) - 3] + '/'
@@ -186,6 +195,7 @@ def image_coordinates(start_path, csv_path, p_result):  # video_path, path_calib
 #         cv2.waitKey(0)
 
 #
+
 def main():
     parser = argparse.ArgumentParser(description="Create the trajectories' file from a csv file of a video sequence")
     parser.add_argument("--csv_path", dest="csv_p", default=None, help="Path of the csv file of trajectory")
@@ -198,10 +208,5 @@ def main():
 # plot_image.py --csv_path /andromeda/datasets/rc_car_maneuvers/aivdepth/test_results/single_frame/grafici/summarize_test.csv --result_p /andromeda/datasets/rc_car_maneuvers/video_finale/grafici/
 if __name__ == '__main__':
     main()
-#if __name__ == "__main__":
-    # #main()
-    # start_path = 'C:/Users/ninad/Desktop/frame_dataset/'
-    #
-    # csv_path = 'C:/Users/ninad/Desktop/test_image/augmentation/.csv '
-    # #get_coordinates(start_path, csv_path)
-    # image_coordinates(start_path, csv_path)
+
+# # plot_image.py --csv_path /andromeda/datasets/rc_car_maneuvers/aivdepth/test_results/single_frame/grafici/summarize_test.csv --result_p /andromeda/datasets/rc_car_maneuvers/video_finale/grafici/
