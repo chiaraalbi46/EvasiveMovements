@@ -1,4 +1,3 @@
-import tqdm
 import numpy as np
 import pandas as pd
 import json
@@ -26,7 +25,12 @@ def get_coordinates(start_path, csv_path):
     for k in range(len(data_df['predicted'].values)):
         predicted.append(convert_to_vector(data_df['predicted'].values[k]))
         real.append(convert_to_vector(data_df['real'].values[k]))
-        new_path = start_path + '/'.join(data_df['image_path'][k].split('/')[3:])
+        #new_path = start_path + '/'.join(data_df['image_path'][k].split('/')[5:])
+        if 'flip' in data_df['image_path'][k]:
+            #   print('path', val_path)
+            new_path = data_df['image_path'][k].replace("left_frames_flip_processed", "left_frames_flip")
+        else:
+            new_path = data_df['image_path'][k]
         path.append(new_path)
 
     return predicted, real, path
@@ -96,7 +100,7 @@ def get_data_proj_2(data):
     return data_proj
 
 
-def image_coordinates(start_path, csv_path):  # video_path, path_calib_j, path_json):
+def image_coordinates(start_path, csv_path, p_result):  # video_path, path_calib_j, path_json):
     # video_path = 'C:/Users/ninad/Desktop/video_guida/194/video194.avi'
 
     # start_path = 'C:/Users/ninad/Desktop/frame_dataset/'
@@ -118,6 +122,7 @@ def image_coordinates(start_path, csv_path):  # video_path, path_calib_j, path_j
 
     for j in range(len(real_proj)):
         path_frame = path[j]
+        print('Path_frame: ', path_frame)
         if os.path.exists(path_frame):
 
             img = cv2.imread(path_frame.strip(), -1)
@@ -132,7 +137,7 @@ def image_coordinates(start_path, csv_path):  # video_path, path_calib_j, path_j
                 x_pred = int(pred_proj[j][i][0])
                 y_pred = int(pred_proj[j][i][1])
 
-                # print('x', x, 'y', y)
+                print('x_pred', x_pred, 'y_pred', y_pred, '  x_real', x_real, 'y_real', y_real)
                 cv2.circle(img, (x_real, y_real), 3, (0, 0, 255), 4)
                 cv2.circle(img, (x_pred, y_pred), 3, (0, 255, 0), 4)
 
@@ -144,21 +149,23 @@ def image_coordinates(start_path, csv_path):  # video_path, path_calib_j, path_j
                     next_x_pred = math.ceil(pred_proj[j][i + 1][0])
                     next_y_pred = math.ceil(pred_proj[j][i + 1][1])
                     cv2.line(img, (x_pred, y_pred), (next_x_pred, next_y_pred), (0, 222, 0), 2)
-
             ap = path_frame.split('/')
             name_frame = ap[len(ap) - 1]
-            path_result = '/'.join(ap[:len(ap) - 4]) + '/result/' + ap[len(ap) - 3] + '/'
+            path_result = p_result + '/' + ap[len(ap) - 3] + '/'
+
+            #path_result = '/'.join(ap[:len(ap) - 5]) + '/result/' + ap[len(ap) - 3] + '/'
+            print(path_result)
             if not os.path.exists(path_result):
-                os.mkdir(path_result)
+                os.makedirs(path_result)
             # print(path_result)
-            name = path_result + name_frame + '.png'
+            name = path_result + name_frame
 
                 #cv2.imwrite(name, img)
                # video_img.append(img)
 
             font = cv2.FONT_HERSHEY_SIMPLEX
             cv2.putText(img, 'Ground Truth', (100, 100), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
-            cv2.putText(img, 'Predicted', (100, 150), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+            cv2.putText(img, 'Predicted', (100, 150), font, 1, (0, 258, 0), 2, cv2.LINE_AA)
 
             cv2.imwrite(name, img)
 
@@ -179,18 +186,22 @@ def image_coordinates(start_path, csv_path):  # video_path, path_calib_j, path_j
 #         cv2.waitKey(0)
 
 #
-# # python trajectories_draw.py --json_path /home/aivdepth/datasets/images_dataset/normal/video29/
-# def main():
-#     parser = argparse.ArgumentParser(description="Create the trajectories' file from a csv file of a video sequence")
-#     parser.add_argument("--csv_path", dest="csv_p", default=None, help="Path of the csv file of trajectory")
-#     parser.add_argument("--start_path", dest="start_p", default=None, help="Initial path, where the dataset is located")
-#
-#     args = parser.parse_args()
-#     image_coordinates(start_path=args.start_p, csv_path=args.csv_p)
+def main():
+    parser = argparse.ArgumentParser(description="Create the trajectories' file from a csv file of a video sequence")
+    parser.add_argument("--csv_path", dest="csv_p", default=None, help="Path of the csv file of trajectory")
+    parser.add_argument("--start_path", dest="start_p", default=None, help="Initial path, where the dataset is located")
+    parser.add_argument("--result_p", dest="result_p", default=None, help="Initial path, where the dataset is located")
 
+    args = parser.parse_args()
+    image_coordinates(start_path=args.start_p, csv_path=args.csv_p, p_result=args.result_p)
 
-if __name__ == "__main__":
-    #main()
-    start_path = 'C:/Users/ninad/Desktop/frame_dataset/'
-    csv_path = 'C:/Users/ninad/Desktop/video_guida/summarize_test.csv '
-    get_coordinates(start_path, csv_path)
+# plot_image.py --csv_path /andromeda/datasets/rc_car_maneuvers/aivdepth/test_results/single_frame/grafici/summarize_test.csv --result_p /andromeda/datasets/rc_car_maneuvers/video_finale/grafici/
+if __name__ == '__main__':
+    main()
+#if __name__ == "__main__":
+    # #main()
+    # start_path = 'C:/Users/ninad/Desktop/frame_dataset/'
+    #
+    # csv_path = 'C:/Users/ninad/Desktop/test_image/augmentation/.csv '
+    # #get_coordinates(start_path, csv_path)
+    # image_coordinates(start_path, csv_path)
