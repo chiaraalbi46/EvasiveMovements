@@ -139,17 +139,22 @@ def image_coordinates(csv_path, p_result):  # video_path, path_calib_j, path_jso
                 y_pred = int(pred_proj[j][i][1])
 
                 # print('x', x, 'y', y)
-                cv2.circle(img, (x_real, y_real), 3, (0, 0, 255), 4)
-                cv2.circle(img, (x_pred, y_pred), 3, (0, 255, 0), 4)
+                if (i % 10) == 0:   # prendo ogni 10 frame 
+                    cv2.circle(img, (x_real, y_real), 3, (0, 0, 255), 4)
+
+                if i < 10:  # prendo i primi 10 punti
+                    cv2.circle(img, (x_pred, y_pred), 3, (0, 255, 0), 4)
 
                 if (i < (len(real_proj[j]) - 1)):
                     next_x_real = math.ceil(real_proj[j][i + 1][0])
                     next_y_real = math.ceil(real_proj[j][i + 1][1])
-                    cv2.line(img, (x_real, y_real), (next_x_real, next_y_real), (0, 0, 222), 2)
+                    if (i % 10) == 0:
+                       cv2.line(img, (x_real, y_real), (next_x_real, next_y_real), (0, 0, 222), 2)
 
                     next_x_pred = math.ceil(pred_proj[j][i + 1][0])
                     next_y_pred = math.ceil(pred_proj[j][i + 1][1])
-                    cv2.line(img, (x_pred, y_pred), (next_x_pred, next_y_pred), (0, 222, 0), 2)
+                    if i < 10:
+                       cv2.line(img, (x_pred, y_pred), (next_x_pred, next_y_pred), (0, 222, 0), 2)
             ap = path_frame.split('/')
             name_frame = ap[len(ap) - 1]
             path_result = p_result + '/' + ap[len(ap) - 3] + '/'
