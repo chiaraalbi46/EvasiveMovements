@@ -52,8 +52,7 @@ def load_image(image_file):
     print("Image file: ", image_file)
     # img = cv2.imread(image_file)
     img = cv2.imread(image_file.strip(), -1)
-    img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)  # bo
-
+    img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
     return img
 
 
