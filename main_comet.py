@@ -50,7 +50,7 @@ def main():
 
     print("SHUFFLE TRAIN: ", bool(args.shuffle_train))
     len_seq = int(args.len_seq)
-    lr = int(args.lr)
+    lr = float(args.lr)
     project = args.name_exp
     # experiment = Experiment(project_name=args.name_proj)
     # experiment.set_name(args.name_exp)
