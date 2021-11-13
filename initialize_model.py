@@ -3,7 +3,7 @@ import torch.nn as nn
 from model import NET
 
 
-def initialize_model(model_type, cfg, mode, len_seq):  # ho aggiunto il passaggio di len_seq ...rivedere
+def initialize_model(model_type, cfg, mode, len_seq, lr, opt):  # ho aggiunto il passaggio di len_seq ...rivedere
     if mode == 'train':
         batch_size = cfg.TRAIN.BATCH_SIZE
         # len_seq = cfg.TRAIN.LEN_SEQUENCES
@@ -21,13 +21,21 @@ def initialize_model(model_type, cfg, mode, len_seq):  # ho aggiunto il passaggi
 
     if mode == 'train':
 
-        if cfg.TRAIN.OPTIMIZER == 'Adam':
-            optimizer = torch.optim.Adam(model.parameters(), lr=cfg.TRAIN.LEARNING_RATE)
-        elif cfg.TRAIN.OPTIMIZER == 'SGD':
-            optimizer = torch.optim.SGD(model.parameters(), lr=cfg.TRAIN.LEARNING_RATE, momentum=cfg.TRAIN.MOMENTUM)
-        elif cfg.TRAIN.OPTIMIZER == 'RMS':
-            optimizer = torch.optim.RMSprop(model.parameters(), lr=cfg.TRAIN.LEARNING_RATE, alpha=cfg.TRAIN.ALPHA,
+        if opt == 'Adam':
+            optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+        elif opt == 'SGD':
+            optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=cfg.TRAIN.MOMENTUM)
+        elif opt == 'RMS':
+            optimizer = torch.optim.RMSprop(model.parameters(), lr=lr, alpha=cfg.TRAIN.ALPHA,
                                             momentum=cfg.TRAIN.MOMENTUM)
+
+        # if cfg.TRAIN.OPTIMIZER == 'Adam':
+        #     optimizer = torch.optim.Adam(model.parameters(), lr=cfg.TRAIN.LEARNING_RATE)
+        # elif cfg.TRAIN.OPTIMIZER == 'SGD':
+        #     optimizer = torch.optim.SGD(model.parameters(), lr=cfg.TRAIN.LEARNING_RATE, momentum=cfg.TRAIN.MOMENTUM)
+        # elif cfg.TRAIN.OPTIMIZER == 'RMS':
+        #     optimizer = torch.optim.RMSprop(model.parameters(), lr=cfg.TRAIN.LEARNING_RATE, alpha=cfg.TRAIN.ALPHA,
+        #                                     momentum=cfg.TRAIN.MOMENTUM)
 
         return model, criterion, optimizer
 

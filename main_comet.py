@@ -38,6 +38,11 @@ def main():
                         help="number of graphics during train on comet")
     parser.add_argument("--len_seq", dest="len_seq", default=10,
                         help="number of future points predicted (sequence lenght)")  # per train, validation e test
+    parser.add_argument("--lr", dest="lr", default=cfg.TRAIN.LEARNING_RATE,
+                        help="Learning rate train")
+    parser.add_argument("--opt", dest="opt", default=cfg.TRAIN.OPTIMIZER,
+                        help="Optimizar")
+
     # TODO:rivedere ...
     # prenderebbe i valori del config ma per ora passiamolo perchè dobbiamo fare prove con 10/30
 
@@ -45,6 +50,7 @@ def main():
 
     print("SHUFFLE TRAIN: ", bool(args.shuffle_train))
     len_seq = int(args.len_seq)
+    lr = int(args.lr)
     project = args.name_exp
     # experiment = Experiment(project_name=args.name_proj)
     # experiment.set_name(args.name_exp)
@@ -101,12 +107,12 @@ def main():
             print("epoch: {}".format(args.epochs))
             print("validation period: {}".format(args.period))
             print("batch size: {}".format(cfg.TRAIN.BATCH_SIZE))
-            print("learning rate: {}".format(cfg.TRAIN.LEARNING_RATE))
+            print("learning rate: {}".format(args.lr))  # cfg.TRAIN.LEARNING_RATE
             print("GPU device: {}".format(args.device))
             print("len_seq: {}".format(args.len_seq))  # cfg.TRAIN.LEN_SEQUENCES
             print("hidden_dimension: {}".format(cfg.DIMENSION[args.model_type]))
             print("Loss Function: {}".format(cfg.TRAIN.LOSS))
-            print("Optimizer: {}".format(cfg.TRAIN.OPTIMIZER))
+            print("Optimizer: {}".format(args.opt))  # cfg.TRAIN.OPTIMIZER
             print("Decrement period: {}".format(cfg.TRAIN.DEC_PERIOD))
             print("num_layers: {}".format(cfg.LAYERS))
             print("you are working with {} model".format(args.model_type))
@@ -117,7 +123,7 @@ def main():
                 "num_layers": cfg.LAYERS,
                 "batch_size": cfg.TRAIN.BATCH_SIZE,
                 "num_epochs": args.epochs,
-                "learning_rate": cfg.TRAIN.LEARNING_RATE
+                "learning_rate": args.lr  # cfg.TRAIN.LEARNING_RATE
             }
 
             experiment.log_parameters(hyper_params)
@@ -130,7 +136,7 @@ def main():
 
             # model, criterion, optimizer = initialize_model(model_type=args.model_type, cfg=cfg, mode='train')
             model, criterion, optimizer = initialize_model(model_type=args.model_type, cfg=cfg, mode='train',
-                                                           len_seq=len_seq)  # add len_seq
+                                                           len_seq=len_seq, lr=lr, opt=args.opt)  # add len_seq, lr, opt
 
             experiment.set_model_graph(model)
 

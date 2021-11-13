@@ -50,13 +50,9 @@ def load_data_singleframe(csv_path, len_sequence):
 
 def load_image(image_file):
     print("Image file: ", image_file)
-    img = cv2.imread(image_file)
-    print(type(img))
-    # img = cv2.imread(image_file.strip(), -1)
-
-    # height = img.shape[0]
-    # width = img.shape[1]
-    # img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)  # bo
+    # img = cv2.imread(image_file)
+    img = cv2.imread(image_file.strip(), -1)
+    img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)  # bo
 
     return img
 
