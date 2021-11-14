@@ -5,8 +5,6 @@ from configs.config import cfg
 from net_utilities import right_slash
 import csv
 
-# CSV_DATASET_PATH = cfg.CSV_DATASET_PATH  # os.path.join(DATASETS_PATH, 'csv_dataset')
-
 
 def video_traj(filewriter, data, path, flip):
     for i in range(len(data)):
@@ -28,12 +26,12 @@ def video_traj(filewriter, data, path, flip):
         img_path = right_slash(os.path.join(path, "left_frames" + flip + "processed/", name + '.png'))
         # print('path: ', img_path)
         past.append(data[i]['Present'])  # past = past + present
-        lines = [path, img_path, past, future]  # rivedere se serve path
+        lines = [path, img_path, past, future]
         filewriter.writerow(lines)
-    # return filewriter
 
 
-def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp, project):  # origin_distance, future_points
+def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp,
+               project):  # origin_distance, future_points
     config_path = config_path + config_f
     # file_path = config_path + data_type + '.json'
     file_path = right_slash(os.path.join(config_path, data_type + '.json'))
@@ -52,9 +50,10 @@ def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp
     save_path = right_slash(os.path.join(save_dir, data_type + '_' + config_f + '_' + str(len_seq) + '_sequence.csv'))
     print("save_path: ", save_path)
 
+    episodes_counter = 0  # contatore episodi (= numero di frame 'origini' per cui si costruiscono le traiettorie)
     with open(save_path, 'w') as csvfile:
         filewriter = csv.writer(csvfile)
-        for j in range(len(d)):  # ciclo sul json
+        for j in range(len(d)):  # ciclo sul json di configurazione (train / test / validation)
             path = d[j]['Path']  # path alla cartella video j-esimo
             print("PATH: ", path)
 
@@ -64,17 +63,21 @@ def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp
             json_folder = path + '/'
             # print("json folder: ", json_folder)
 
-            data = json.load(open(json_folder + vid_name + '_' + od + '_' + fp + '_traj.json'))  # apro il file con le traiettorie
+            # apro il file con le traiettorie
+            data = json.load(open(json_folder + vid_name + '_' + od + '_' + fp + '_traj.json'))
+            episodes_counter += len(data)  # len(data) = numero di episodi per singolo video
             video_traj(filewriter, data, path, '_')
 
             if flip == 1:
                 data_flip = json.load(
-                    open(json_folder + vid_name + '_' + od + '_' + fp + '_traj_flip.json'))  # apro il file con le traiettorie
+                    open(json_folder + vid_name + '_' + od + '_' + fp + '_traj_flip.json'))
+                episodes_counter += len(data_flip)  # len(data_flip) = numero di episodi per singolo video flipped
                 video_traj(filewriter, data_flip, path, '_flip_')
+
+    print("Number of episodes for " + data_type + " data: ", episodes_counter)
 
 
 def main():
-
     parser = argparse.ArgumentParser(description="Create the CSV file from video sequences.")
     parser.add_argument("--csv_path", dest="csv", default=cfg.CSV_DATASET_PATH,
                         help="Path to the json folder where 'splitting' files are contained")
@@ -88,7 +91,6 @@ def main():
     parser.add_argument("--od", dest="od", default=None, help="Origin distance")
     parser.add_argument("--fp", dest="fp", default=None, help="Number of future points")
     parser.add_argument("--project", dest="project", default=None, help="Name of the project folder.")
-
 
     args = parser.parse_args()
 
