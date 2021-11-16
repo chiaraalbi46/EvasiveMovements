@@ -186,7 +186,8 @@ def main():
                                                                               len_sequence=len_seq)
             # cfg.TEST.LEN_SEQUENCES
 
-            model, criterion = initialize_model(model_type=args.model_type, cfg=cfg, mode='test', len_seq=len_seq, lr=lr, opt=args.opt)
+            model, criterion = initialize_model(model_type=args.model_type, cfg=cfg, mode='test', len_seq=len_seq,
+                                                lr=lr, opt=args.opt)
 
             test_data = TensorDataset(torch.from_numpy(test_images), torch.from_numpy(test_coordinates))
 

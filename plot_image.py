@@ -82,6 +82,9 @@ def get_data_proj_2(data):
     for j in range(len(data)):
         tmp = []
         for i in range(len(data[j])):
+            if data[j][i][1] > 0:
+                data[j][i][1] = -1 * data[j][i][1]
+
             canvas_x = ((data[j][i][0] * f) / - data[j][i][1])
             # canvas_y = ((data[j][i][1] * f) / - data[j][i])
             canvas_y = ((-1 * f) / - data[j][i][1])
@@ -98,6 +101,7 @@ def get_data_proj_2(data):
 
         data_proj.append(tmp)
     return data_proj
+
 
 def image_coordinates(csv_path, p_result): 
     # video_path = 'C:/Users/ninad/Desktop/video_guida/194/video194.avi'
