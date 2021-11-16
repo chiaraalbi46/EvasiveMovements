@@ -65,7 +65,7 @@ def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp
 
             # apro il file con le traiettorie
             # data = json.load(open(json_folder + vid_name + '_' + od + '_' + fp + '_traj.json'))
-            data = json.load(open(json_folder + vid_name + '_' + od + '_' + fp + '_' + pp + '_traj_flip.json'))
+            data = json.load(open(json_folder + vid_name + '_' + od + '_' + fp + '_' + pp + '_traj.json'))
             episodes_counter += len(data)  # len(data) = numero di episodi per singolo video
             video_traj(filewriter, data, path, '_')
 
