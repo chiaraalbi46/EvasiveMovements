@@ -56,12 +56,13 @@ def create_json_flip(path_json):
     write_json(d, path_save)
 
 
-def get_path_json(video_json_path, origin_distance, point_future, dest_folder):
+def get_path_json(video_json_path, origin_distance, point_future, point_past, dest_folder):
     spl = video_json_path.split(os.sep)  # '/'
     vid_name = spl[len(spl) - 1]
     spl1 = vid_name.split('.')
     vname = spl1[0]
-    final_name = vname + '_' + str(origin_distance) + '_' + str(point_future) + '_traj.json'
+    # final_name = vname + '_' + str(origin_distance) + '_' + str(point_future) + '_traj.json'
+    final_name = vname + '_' + str(origin_distance) + '_' + str(point_future) + '_' + str(point_past) + '_traj.json'
     pathToTrajFile = dest_folder + final_name  # devo avere messo lo slah in pathToTrajDir !
     return pathToTrajFile
 
@@ -132,7 +133,7 @@ def create_traj_json(video_json_path, i_start, point_past, point_future, origin_
             past = []
             f += 1
 
-    pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future - 1, dest_folder)  # point_future - 1
+    pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future - 1, point_past, dest_folder)
 
     write_json(array, pathToTrajFile)
     for i in range(len(array)):
@@ -158,7 +159,7 @@ def folder_process(folder, i_start, point_past, point_future, origin_distance, f
                 print('flip', type(flip), flip)
                 create_traj_json(video_json_path, i_start, point_past, point_future, origin_distance, json_folder)
             if flip == 1 or flip == 2:
-                pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future, json_folder)
+                pathToTrajFile = get_path_json(video_json_path, origin_distance, point_future, point_past, json_folder)
                 create_json_flip(pathToTrajFile)
 
 
@@ -169,7 +170,7 @@ def main():
     parser.add_argument("--i_start", dest="start", default=0, help="Initial system origin")
     # parser.add_argument("--step", dest="step", default=10, help="Step")
 
-    parser.add_argument("--point_past", dest="past", default=5,
+    parser.add_argument("--point_past", dest="past", default=1,
                         help="Number of past points to remap in the new reference system")
     parser.add_argument("--point_future", dest="future", default=10,
                         help="Number of future points to remap in the new reference system")

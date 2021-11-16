@@ -30,8 +30,8 @@ def video_traj(filewriter, data, path, flip):
         filewriter.writerow(lines)
 
 
-def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp,
-               project):  # origin_distance, future_points
+def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp, pp,
+               project):  # origin_distance, future_points, past points
     config_path = config_path + config_f
     # file_path = config_path + data_type + '.json'
     file_path = right_slash(os.path.join(config_path, data_type + '.json'))
@@ -64,13 +64,15 @@ def create_csv(csv_path, config_path, config_f, data_type, len_seq, flip, od, fp
             # print("json folder: ", json_folder)
 
             # apro il file con le traiettorie
-            data = json.load(open(json_folder + vid_name + '_' + od + '_' + fp + '_traj.json'))
+            # data = json.load(open(json_folder + vid_name + '_' + od + '_' + fp + '_traj.json'))
+            data = json.load(open(json_folder + vid_name + '_' + od + '_' + fp + '_' + pp + '_traj_flip.json'))
             episodes_counter += len(data)  # len(data) = numero di episodi per singolo video
             video_traj(filewriter, data, path, '_')
 
             if flip == 1:
                 data_flip = json.load(
-                    open(json_folder + vid_name + '_' + od + '_' + fp + '_traj_flip.json'))
+                    open(json_folder + vid_name + '_' + od + '_' + fp + '_' + pp + '_traj_flip.json'))
+                # open(json_folder + vid_name + '_' + od + '_' + fp + '_traj_flip.json'))
                 episodes_counter += len(data_flip)  # len(data_flip) = numero di episodi per singolo video flipped
                 video_traj(filewriter, data_flip, path, '_flip_')
 
@@ -90,12 +92,13 @@ def main():
     parser.add_argument("--flip", dest="flip", default=0, help="0 no flip, 1 flip")
     parser.add_argument("--od", dest="od", default=None, help="Origin distance")
     parser.add_argument("--fp", dest="fp", default=None, help="Number of future points")
+    parser.add_argument("--pp", dest="pp", default=1, help="Number of past points")
     parser.add_argument("--project", dest="project", default=None, help="Name of the project folder.")
 
     args = parser.parse_args()
 
     create_csv(csv_path=args.csv, config_path=args.input, config_f=args.folder, data_type=args.data_type,
-               len_seq=int(args.len_seq), flip=int(args.flip), od=args.od, fp=args.fp, project=args.project)
+               len_seq=int(args.len_seq), flip=int(args.flip), od=args.od, fp=args.fp, pp=args.pp, project=args.project)
 
 
 if __name__ == '__main__':
