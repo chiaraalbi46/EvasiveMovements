@@ -142,25 +142,25 @@ def image_coordinates(csv_path, p_result):
                 y_pred = int(pred_proj[j][i][1])
 
                 # print('x', x, 'y', y)
-                if (i % 10) == 0:   # prendo ogni 10 frame 
-                    cv2.circle(img, (x_real, y_real), 3, (0, 0, 255), 4)
+                #if (i % 10) == 0:   # prendo ogni 10 frame 
+                cv2.circle(img, (x_real, y_real), 3, (0, 255, 0), 4)
 
-                if i < 10:  # prendo i primi 10 punti
-                    cv2.circle(img, (x_pred, y_pred), 3, (0, 255, 0), 4)
+                #if i < 11:  # prendo i primi 10 punti
+                cv2.circle(img, (x_pred, y_pred), 3, (0, 0, 255), 4)
 
 
                 if (i < (len(real_proj[j]) - 1)):
                     next_x_real = math.ceil(real_proj[j][i + 1][0])
                     next_y_real = math.ceil(real_proj[j][i + 1][1])
-                    if (i % 10) == 0:
-                       cv2.line(img, (x_real, y_real), (next_x_real, next_y_real), (0, 0, 222), 2)
+                    #if (i % 10) == 0:
+                    cv2.line(img, (x_real, y_real), (next_x_real, next_y_real), (0, 222, 0), 2)
 
                     next_x_pred = math.ceil(pred_proj[j][i + 1][0])
                     next_y_pred = math.ceil(pred_proj[j][i + 1][1])
 
                     
-                    if i < 10:
-                       cv2.line(img, (x_pred, y_pred), (next_x_pred, next_y_pred), (0, 222, 0), 2)
+                    #if i < 10:
+                    cv2.line(img, (x_pred, y_pred), (next_x_pred, next_y_pred), (0, 0, 222), 2)
 
             ap = path_frame.split('/')
             name_frame = ap[len(ap) - 1]
@@ -177,8 +177,8 @@ def image_coordinates(csv_path, p_result):
                # video_img.append(img)
 
             font = cv2.FONT_HERSHEY_SIMPLEX
-            cv2.putText(img, 'Ground Truth', (100, 100), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
-            cv2.putText(img, 'Predicted', (100, 150), font, 1, (0, 258, 0), 2, cv2.LINE_AA)
+            cv2.putText(img, 'Ground Truth', (100, 100), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+            cv2.putText(img, 'Predicted', (100, 150), font, 1, (0, 0, 258), 2, cv2.LINE_AA)
 
             cv2.imwrite(name, img)
 
@@ -203,11 +203,10 @@ def image_coordinates(csv_path, p_result):
 def main():
     parser = argparse.ArgumentParser(description="Create the trajectories' file from a csv file of a video sequence")
     parser.add_argument("--csv_path", dest="csv_p", default=None, help="Path of the csv file of trajectory")
-    parser.add_argument("--start_path", dest="start_p", default=None, help="Initial path, where the dataset is located")
     parser.add_argument("--result_p", dest="result_p", default=None, help="Initial path, where the dataset is located")
 
     args = parser.parse_args()
-    image_coordinates(start_path=args.start_p, csv_path=args.csv_p, p_result=args.result_p)
+    image_coordinates(csv_path=args.csv_p, p_result=args.result_p)
 
 # plot_image.py --csv_path /andromeda/datasets/rc_car_maneuvers/aivdepth/test_results/single_frame/grafici/summarize_test.csv --result_p /andromeda/datasets/rc_car_maneuvers/video_finale/grafici/
 if __name__ == '__main__':
