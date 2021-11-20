@@ -215,9 +215,10 @@ def train(model, criterion, optimizer, train_loader, val_loader, epochs, val_per
             print("Train Loss: {:.3f} - ".format(sum(train_losses[i]) / len(train_losses[i])),
                   "Validation Loss: {:.3f}".format(sum(val_losses[i]) / len(val_losses[i])))
 
-            torch.save(model.state_dict(),
-                       save_weights + '/weight_' + str(sum(val_losses[i]) / len(val_losses[i])) + '_' + str(
-                           i + 1) + '.pth')
+            # torch.save(model.state_dict(),
+            #            save_weights + '/weight_' + str(sum(val_losses[i]) / len(val_losses[i])) + '_' + str(
+            #                i + 1) + '.pth')
+            torch.save(model.state_dict(), save_weights + '/weight_' + str(i + 1) + '.pth')
         # exp.log_epoch_end(i + 1)
         scheduler.step()
 

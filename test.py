@@ -27,7 +27,7 @@ def test(model, criterion, model_path, test_loader, paths, dev, save_path):
     model.to(device)
     model.eval()
 
-    print("starting testig the model")
+    print("Starting testing the model")
 
     current_path = 0
 
