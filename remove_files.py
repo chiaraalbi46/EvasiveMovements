@@ -1,4 +1,4 @@
-# Remove files
+""" Remove files """
 
 import os
 from net_utilities import right_slash
