@@ -5,6 +5,8 @@ import torch
 from configs.config import cfg
 import numpy as np
 from metrics_eval import ADE, FDE
+from net_utilities import write_json
+import json
 
 
 def test(model, criterion, model_path, test_loader, paths, dev, save_path):
@@ -60,6 +62,7 @@ def test(model, criterion, model_path, test_loader, paths, dev, save_path):
                     filewriter.writerow(lines)
                     current_path += 1
 
+
     print()
     print("saved resume csv file in " + csv_file)
     print()
@@ -71,6 +74,8 @@ def test(model, criterion, model_path, test_loader, paths, dev, save_path):
     print()
     print("Test FDE: {:.3f}".format(np.mean(test_fdes)))
     print('*' * 100)
+    result = {'Loss': np.mean(test_losses), 'ADE': np.mean(test_ades), 'FDE:': np.mean(test_fdes)}
+    write_json(result, save_path)
     # print('Starting Video Creation')
     #
     # save_video(video_name=video_name, csv_path=csv_file, len_seq=cfg.TEST.LEN_SEQUENCES, model_type=model_type)
