@@ -75,7 +75,7 @@ def test(model, criterion, model_path, test_loader, paths, dev, save_path):
     print("Test FDE: {:.3f}".format(np.mean(test_fdes)))
     print('*' * 100)
     result = {'Loss': np.mean(test_losses), 'ADE': np.mean(test_ades), 'FDE:': np.mean(test_fdes)}
-    write_json(result, save_path)
+    write_json(result, save_path +  '/test_result.json')
     # print('Starting Video Creation')
     #
     # save_video(video_name=video_name, csv_path=csv_file, len_seq=cfg.TEST.LEN_SEQUENCES, model_type=model_type)
