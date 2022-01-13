@@ -7,7 +7,7 @@ This repo contains the work made for the project of ***Image and Video Analysis*
 The **goal** of the project is training a neural network (NN) to predict the future trajectories of a radio controlled car. The NN is fed with the frames of the videos recorded during some driving sessions, with a ZED camera mounted on the car. 
 
 <p align="center">
-  <img src="./Immagine1.JPG" />
+  <img src="./Immagine1.jpg" />
 </p>
 
 
